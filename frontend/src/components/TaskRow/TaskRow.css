@@ -1,0 +1,51 @@
+.task-row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-start;
+
+    background-color: white;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: rgb(221, 221, 221);
+    border-width: thin;
+    display: flex;
+    padding: 10px;
+    gap: 10px;
+    transition: 0.5s;
+    cursor: pointer;
+    line-height: normal;
+    margin-bottom: 10px;
+}
+
+.task-row:hover {
+    transform: scale(1.02);
+    -webkit-box-shadow: 0px 5px 25px 0px rgba(0,0,0,0.15); 
+    box-shadow: 0px 5px 25px 0px rgba(0,0,0,0.15);
+}
+
+.task-row > .task-priority-pill {
+    min-width: 55px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.task-row > .task-identifier-pill {
+    min-width: 55px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.task-row > .task-title {
+    width: 360px;
+    white-space: nowrap;
+    overflow-x: hidden !important;
+    text-overflow: ellipsis;
+}
+
+.task-row > .task-arrow {
+    width: 11px;
+    text-align: center;
+    text-transform: uppercase;
+}

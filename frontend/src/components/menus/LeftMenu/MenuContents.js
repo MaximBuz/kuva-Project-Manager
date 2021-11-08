@@ -1,0 +1,52 @@
+import {
+    UilApps,
+    UilUser,
+    UilDialpad,
+    UilUsersAlt,
+    UilSchedule
+} from '@iconscout/react-unicons'
+
+
+const projectsIcon = <UilApps/>;
+const accountIcon = <UilUser/>;
+const tasksIcon = <UilDialpad/>;
+const collaboratorsIcon = <UilUsersAlt/>;
+const backlogIcon = <UilSchedule/>;
+
+export const projectsOverviewItems = [{
+    icon: projectsIcon,
+    text: "All Projects",
+    link: "/",
+    active: true
+},{
+    icon: accountIcon,
+    text: "Account Settings",
+    link: "account",
+    active: false
+}];
+
+
+export const projectDetailItems = [{
+    icon: projectsIcon,
+    text: "All Projects",
+    link: "/",
+    active: false
+},{
+    icon: tasksIcon,
+    text: "Project Overview",
+    // link wird im MenuItem component erweitet
+    link: "/project/{CHANGETHIS}/",
+    active: true
+},{
+    icon: backlogIcon,
+    text: "Backlog",
+    // link wird im MenuItem component erweitet
+    link: "backlog",
+    active: false
+},{
+    icon: collaboratorsIcon,
+    text: "Team Members",
+    // link wird im MenuItem component erweitet
+    link: "collaborators",
+    active: false
+}];

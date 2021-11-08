@@ -1,0 +1,13 @@
+.counter-blob {
+    background-color: #FF0ABA;
+    color: white;
+    width: 17px;
+    height: 17px;
+    padding: 5px;
+    border-radius: 100000px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 0em;
+}

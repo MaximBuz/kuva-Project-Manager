@@ -1,0 +1,9 @@
+const projectsTypes = {
+  ADD_PROJECT: 'ADD_PROJECT',
+  DELETE_PROJECT: "DELETE_PROJECT",
+  UPDATE_PROJECT: "UPDATE_PROJECT",
+  GET_PROJECTS: "GET_PROJECTS",
+  GET_PROJECT: "GET_PROJECT"
+};
+  
+  export default projectsTypes;

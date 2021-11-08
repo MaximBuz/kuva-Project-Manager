@@ -1,0 +1,10 @@
+.menu-left-wrapper{
+    position: absolute;
+    top: 100px;
+    left: 33px;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px;
+    z-index: 100;
+}
