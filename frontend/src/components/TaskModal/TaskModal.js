@@ -5,6 +5,12 @@ import "./TaskModal.css"
 
 function Modal({ closeModal, task }) {
 
+    let priorityColor;
+    console.log(task.taskPriority)
+    if (task.taskPriority == "low") {priorityColor = "green";}
+    else if (task.taskPriority == "medium") {priorityColor = "yellow";}
+    else {priorityColor = "red";}
+    console.log(priorityColor)
 
     return ReactDom.createPortal(
         <>
@@ -32,37 +38,52 @@ function Modal({ closeModal, task }) {
                             <h1 className="task-modal-title">{task.taskTitle}</h1>
                             <p>Created REPLACE hours ago</p>
                     </div>
+                    <div className="task-modal-content">
 
-                    <div className="task-modal-left-section">
-                        <div className="text-area">
-                            <div className="summary">
-
+                        <div className="task-modal-section left">
+                            <div className="text-area">
+                                <div className="summary section">
+                                    <h3>Summary</h3>
+                                    <p>{task.taskSummary}</p>
+                                </div>
+                                <div className="description section">
+                                    <h3>Description</h3>
+                                    <p>{task.taskDescription}</p>
+                                </div>
                             </div>
-                            <div className="description">
-
+                            <div className="comments-area section">
+                                <h3>Activity</h3>
+                                <p>CHATAREA</p>
                             </div>
                         </div>
-                        <div className="comments-area">
-                            TO BE CONTINUED
-                        </div>
-                    </div>
 
-                    <div className="task-modal-right-section">
-                        <div className="priority">
+                        <div className="task-modal-section right">
+                            <div className="priority section">
+                                <h3>Priority</h3>
+                                <div className={"priority-pill" + " " + priorityColor}>
+                                    <p>{task.taskPriority}</p>
+                                </div>
+                            </div>
+                            
+                            <div className="status section">
+                                <h3>Status</h3>
+                                <div className="status-pill">
+                                    <p>{task.status}</p>
+                                </div>
+                            </div>
+                            
+                            <div className="assigned-to section">
+                                <h3>Assigned To</h3>
+                                {/* User Card Components */}
+                            </div>
+                            
+                            <div className="author section">
+                                <h3>Author</h3>
+                                {/* User Card Component */}
+                            </div>
+                            
                         </div>
-                        
-                        <div className="status">
 
-                        </div>
-                        
-                        <div className="assigned-to">
-
-                        </div>
-                        
-                        <div className="author">
-
-                        </div>
-                        
                     </div>
 
                 </div>

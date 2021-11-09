@@ -31,6 +31,7 @@ function TaskRow(props) {
                 {...provided.draggableProps}
                 ref={provided.innerRef}
                 isDragging={snapshot.isDragging}
+                onClick={props.onClick}
             >
                 <div className="task-identifier-pill">
                     <p>{identifier}</p>

@@ -12,6 +12,8 @@
 
 .task-modal-wrapper {
     /* position in center of page */
+    width: 70%;
+    max-width: 700px;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -22,6 +24,7 @@
     border-radius: 25px;
     -webkit-box-shadow: 0px 5px 50px 10px rgba(0,0,0,0.45); 
     box-shadow: 0px 5px 50px 10px rgba(0,0,0,0.45);
+    
 
     /* style the contents */
     display: flex;
@@ -71,7 +74,8 @@
 .task-header-title-row {
     display: flex;
     flex-direction: column;
-    gap: 10px
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
 .task-modal-title{
@@ -82,4 +86,83 @@
 
 .task-modal-close{
     cursor: pointer;
+}
+
+
+
+
+
+.task-modal-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.task-modal-content * > h3{
+    color: #35307E;
+    font-weight: bolder;
+}
+.task-modal-content * > .section {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.task-modal-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.task-modal-section.left {
+    width: 60%;
+}
+.task-modal-section.right {
+    width: 40%;
+}
+
+.task-modal-section.left > .text-area {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.task-modal-section * > .priority-pill {
+    color: white;
+    border-radius: 6px;
+    padding: 5px 10px 5px 10px;
+    margin: 0px;
+    width:fit-content;
+    height: fit-content;
+    font-size: medium;
+    font-weight: 400;
+    transition: 0.15s;
+}
+
+.task-modal-section * > .priority-pill.green {
+    background-color: #45da5e;
+}
+
+.task-modal-section * > .priority-pill.yellow {
+    background-color: #f8b965;
+}
+
+.task-modal-section * > .priority-pill.red {
+    background-color: #e96262;
+}
+
+.task-modal-section * > .status-pill {
+    border-radius: 6px;
+    padding: 5px 10px 5px 10px;
+    margin: 0px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #DADADA;
+    width:fit-content;
+    height: fit-content;
+    font-size: medium;
+    font-weight: 400;
+    transition: 0.15s;
 }
