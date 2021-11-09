@@ -19,11 +19,6 @@
     margin-bottom: 10px;
 }
 
-.task-row:hover {
-    transform: scale(1.02);
-    -webkit-box-shadow: 0px 5px 25px 0px rgba(0,0,0,0.15); 
-    box-shadow: 0px 5px 25px 0px rgba(0,0,0,0.15);
-}
 
 .task-row > .task-priority-pill {
     min-width: 55px;
@@ -44,8 +39,10 @@
     text-overflow: ellipsis;
 }
 
-.task-row > .task-arrow {
-    width: 11px;
-    text-align: center;
-    text-transform: uppercase;
+.drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    transition: 0.5s;
 }

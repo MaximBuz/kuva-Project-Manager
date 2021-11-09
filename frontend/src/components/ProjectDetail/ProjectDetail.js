@@ -7,8 +7,16 @@ import { useState, useEffect } from "react";
 import { getTasksInitiate, getTasks, updateTaskInitiate} from '../../redux/tasks/tasks.actions';
 import {DragDropContext} from "react-beautiful-dnd";
 import {Droppable} from "react-beautiful-dnd";
+import TaskModal from "../TaskModal/TaskModal"
 
 function ProjectDetail() {
+
+    /* Handle opening modal for viewing a tasks
+       ------------------------------------------------
+       - setOpenModal wird als prop zum Modal selbst runtergeschickt 
+       ------------------------------------------------ */
+    const [openModal, setOpenModal] = useState("");
+
     
     const { identifier } = useParams();
 
@@ -204,9 +212,18 @@ function ProjectDetail() {
                                     isDraggingOver={snapshot.isDraggingOver}
                                 >
                                     {tasksSelected
+                                        .sort((a, b) => {
+                                            if (a.taskPriority === "high") return -1
+                                            if (a.taskPriority === "medium" && b.taskPriority === "high") return 1
+                                            if (a.taskPriority === "medium" && b.taskPriority === "low") return -1
+                                            if (a.taskPriority === "low") return 1
+                                        })
                                         .map((task, index) => {
                                             return (
                                             <TaskCard
+                                                onClick={ () => {
+                                                    setOpenModal(task.id)
+                                                }}
                                                 key={task.id}
                                                 index={index}
                                                 id={task.id}
@@ -244,6 +261,9 @@ function ProjectDetail() {
                                         .map((task, index) => {
                                             return (
                                             <TaskCard
+                                                onClick={ () => {
+                                                    setOpenModal(task.id)
+                                                }}
                                                 index={index}
                                                 id={task.id}
                                                 identifier={task.identifier}
@@ -280,6 +300,9 @@ function ProjectDetail() {
                                         .map((task, index) => {
                                             return (
                                             <TaskCard
+                                                onClick={ () => {
+                                                    setOpenModal(task.id)
+                                                }}
                                                 index={index}
                                                 id={task.id}
                                                 identifier={task.identifier}
@@ -316,6 +339,9 @@ function ProjectDetail() {
                                         .map((task, index) => {
                                             return (
                                             <TaskCard
+                                                onClick={ () => {
+                                                    setOpenModal(task.id)
+                                                }}
                                                 index={index}
                                                 id={task.id}
                                                 identifier={task.identifier}
@@ -333,6 +359,7 @@ function ProjectDetail() {
                                 </div>
                             )}
                         </Droppable>
+                        {openModal && <TaskModal closeModal={setOpenModal} task={tasks.filter(item => item.id === openModal)[0] }/>}
                     </div>
                 </div>
             </div>

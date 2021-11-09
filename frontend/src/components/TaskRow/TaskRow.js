@@ -1,6 +1,7 @@
 import React from 'react';
 import "./TaskRow.css";
 import { Draggable } from "react-beautiful-dnd";
+import { UilDraggabledots } from '@iconscout/react-unicons'
 
 function TaskRow(props) {
     const index = props.index;
@@ -29,7 +30,6 @@ function TaskRow(props) {
                 className="task-row"
                 {...provided.draggableProps}
                 ref={provided.innerRef}
-                {...provided.dragHandleProps}
                 isDragging={snapshot.isDragging}
             >
                 <div className="task-identifier-pill">
@@ -39,9 +39,9 @@ function TaskRow(props) {
                     <p>{priority}</p>
                 </div>
                 <h2 className="task-title">{title}</h2>
-                <svg width="11" className="task-arrow"  height="19" viewBox="0 0 11 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 1L9.5 9.5L1 18" stroke="black"/>
-                </svg>
+                <div  className="drag-handle" {...provided.dragHandleProps}>
+                    <UilDraggabledots color="#dddddd"/>
+                </div>
             </div>
             )}
         </Draggable>

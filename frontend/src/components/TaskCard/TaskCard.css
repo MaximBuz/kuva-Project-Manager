@@ -60,7 +60,10 @@
     background-color: #f8b965;
 }
 
-.task-arrow {
+.drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-left: auto;
     transition: 0.5s;
 }

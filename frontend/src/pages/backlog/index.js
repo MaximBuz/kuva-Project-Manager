@@ -147,6 +147,12 @@ function BacklogPage() {
                             isDraggingOver={snapshot.isDraggingOver}
                         >
                             {tasksBacklog
+                                .sort((a, b) => {
+                                    if (a.taskPriority === "high") return -1
+                                    if (a.taskPriority === "medium" && b.taskPriority === "high") return 1
+                                    if (a.taskPriority === "medium" && b.taskPriority === "low") return -1
+                                    if (a.taskPriority === "low") return 1
+                                })
                                 .map((task, index) => {
                                     return (
                                     <TaskRow
@@ -185,6 +191,12 @@ function BacklogPage() {
                             isDraggingOver={snapshot.isDraggingOver}
                         >
                             {tasksSelected
+                                .sort((a, b) => {
+                                    if (a.taskPriority === "high") return -1
+                                    if (a.taskPriority === "medium" && b.taskPriority === "high") return 1
+                                    if (a.taskPriority === "medium" && b.taskPriority === "low") return -1
+                                    if (a.taskPriority === "low") return 1
+                                })
                                 .map((task, index) => {
                                     return (
                                     <TaskRow

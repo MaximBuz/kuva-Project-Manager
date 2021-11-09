@@ -1,20 +1,21 @@
 import "./TaskCard.css";
 import { Draggable } from "react-beautiful-dnd";
+import { UilDraggabledots } from '@iconscout/react-unicons'
 
 function TaskCard(props) {
 
     const index = props.index;
-    const taskKey = props.key;
+    // const taskKey = props.key;
     const identifier = props.identifier;
     const id = props.id;
-    const author = props.author;
-    const assigned = props.assigned;
+    // const author = props.author;
+    // const assigned = props.assigned;
     const title = props.title;
-    const timestamp = props.timestamp;
+    // const timestamp = props.timestamp;
     const summary = props.summary;
-    const description = props.description;
+    // const description = props.description;
     const priority = props.priority;
-    const status = props.status;
+    // const status = props.status;
     let priorityColor;
 
     if (priority === "low") {priorityColor = "green";}
@@ -23,14 +24,13 @@ function TaskCard(props) {
 
 
     return (
-        <div>
+        <div onClick={props.onClick}>
             <Draggable draggableId={id} index={index}>
                 {(provided, snapshot) => (
                     <div 
                         className="task-card"
                         {...provided.draggableProps}
                         ref={provided.innerRef}
-                        {...provided.dragHandleProps}
                         isDragging={snapshot.isDragging}
                     >
                         <div className="task-card-top-row">
@@ -40,9 +40,9 @@ function TaskCard(props) {
                             <div className={"task-priority-pill " + priorityColor}>
                                 <p>{priority}</p>
                             </div>
-                            <svg width="11" className="task-arrow"  height="19" viewBox="0 0 11 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M1 1L9.5 9.5L1 18" stroke="black"/>
-                            </svg>
+                            <div  className="drag-handle" {...provided.dragHandleProps}>
+                                <UilDraggabledots color="#dddddd"/>
+                            </div>
                         </div>
 
                         <div className="task-card-content">
