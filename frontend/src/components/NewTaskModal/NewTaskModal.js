@@ -34,13 +34,14 @@ function Modal({ closeModal, projectId }) {
     }
 
     /* STOP!! Change this to TASKS handler!! */
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        dispatch(addTaskInitiate(state));
+        await dispatch(addTaskInitiate(state));
         setTimeout(function(){
             closeModal();
             history.push("backlog"); 
         }, 500);
+        window.location.reload(true);
     }
 
     return ReactDom.createPortal(

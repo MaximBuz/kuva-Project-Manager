@@ -1,17 +1,24 @@
 import ReactDom from "react-dom";
 import "./TaskModal.css"
 import UserCard from "../UserCard/UserCard"
-// import { useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector} from "react-redux";
 // import {useState} from "react"
+import {deleteTaskInitiate} from "../../redux/tasks/tasks.actions";
 
 function Modal({ closeModal, task }) {
 
+    let priority = task.taskPriority || ""
     let priorityColor;
-    console.log(task.taskPriority)
-    if (task.taskPriority == "low") {priorityColor = "green";}
-    else if (task.taskPriority == "medium") {priorityColor = "yellow";}
+    if (priority == "low") {priorityColor = "green";}
+    else if (priority == "medium") {priorityColor = "yellow";}
     else {priorityColor = "red";}
-    console.log(priorityColor)
+
+    const dispatch = useDispatch();
+    const deleteTask = async () => {
+        closeModal()
+        await dispatch(deleteTaskInitiate(task));
+        window.location.reload(true);
+    }
 
     return ReactDom.createPortal(
         <>
@@ -26,7 +33,7 @@ function Modal({ closeModal, task }) {
                             <div className="identifier-pill">
                                 <p>{task.identifier}</p>
                             </div>
-                            <div className="delete-pill">
+                            <div onClick={deleteTask} className="delete-pill">
                                 <p>delete</p>
                             </div>
                         </div>

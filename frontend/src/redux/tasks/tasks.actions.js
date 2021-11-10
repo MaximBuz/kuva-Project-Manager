@@ -1,6 +1,6 @@
 import tasksTypes from './tasks.types';
 import {db} from "../../firebase-config";
-import { collection, addDoc, Timestamp, query, onSnapshot, where, setDoc, doc, updateDoc} from "firebase/firestore"; 
+import { collection, addDoc, Timestamp, query, onSnapshot, where, deleteDoc, doc, updateDoc} from "firebase/firestore"; 
 import { store } from "../store";
 
 const getTasks = (tasks) => ({
@@ -14,6 +14,10 @@ const addTask = () => ({
 
 const updateTask = () => ({
   type: tasksTypes.UPDATE_TASK
+})
+
+const deleteTask = () => ({
+  type: tasksTypes.DELETE_TASK
 })
 
 // Befüllt den Payload des action-creators mit tasks ausm Firestore
@@ -65,5 +69,12 @@ export const updateTaskInitiate = (task) => {
             column: task.column
         })
         dispatch(updateTask());
+    }
+}
+
+export const deleteTaskInitiate = (task) => {
+    return async function(dispatch) {
+        await deleteDoc(doc(db, "tasks", task.id))
+        dispatch(deleteTask());
     }
 }

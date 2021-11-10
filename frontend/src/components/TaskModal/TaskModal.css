@@ -69,6 +69,7 @@
     font-size: medium;
     font-weight: 400;
     transition: 0.15s;
+    cursor: pointer;
 }
 
 .task-header-title-row {

@@ -20,6 +20,10 @@ const taskReducer = (state = INITIAL_STATE, action) => {
         return {
             ...state
         };
+    case tasksTypes.DELETE_TASK:
+        return {
+            ...state
+        };
     default:
         return state;
   }
