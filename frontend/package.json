@@ -21,6 +21,7 @@
     "redux-logger": "3.0.6",
     "redux-persist": "5.6.12",
     "redux-thunk": "^2.3.0",
+    "styled-components": "^5.3.3",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

@@ -1,5 +1,6 @@
 import ReactDom from "react-dom";
 import "./TaskModal.css"
+import UserCard from "../UserCard/UserCard"
 // import { useDispatch, useSelector} from "react-redux";
 // import {useState} from "react"
 
@@ -74,12 +75,13 @@ function Modal({ closeModal, task }) {
                             
                             <div className="assigned-to section">
                                 <h3>Assigned To</h3>
-                                {/* User Card Components */}
+                                <UserCard></UserCard>
+                                <UserCard></UserCard>
                             </div>
                             
                             <div className="author section">
                                 <h3>Author</h3>
-                                {/* User Card Component */}
+                                <UserCard></UserCard>
                             </div>
                             
                         </div>
