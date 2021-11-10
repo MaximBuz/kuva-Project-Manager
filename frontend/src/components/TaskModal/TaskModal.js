@@ -16,7 +16,7 @@ function Modal({ closeModal, task }) {
     const dispatch = useDispatch();
     const deleteTask = async () => {
         closeModal()
-        await dispatch(deleteTaskInitiate(task));
+        await dispatch(deleteTaskInitiate(task.id));
         window.location.reload(true);
     }
 

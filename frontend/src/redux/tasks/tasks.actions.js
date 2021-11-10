@@ -72,9 +72,9 @@ export const updateTaskInitiate = (task) => {
     }
 }
 
-export const deleteTaskInitiate = (task) => {
+export const deleteTaskInitiate = (taskId) => {
     return async function(dispatch) {
-        await deleteDoc(doc(db, "tasks", task.id))
+        await deleteDoc(doc(db, "tasks", taskId))
         dispatch(deleteTask());
     }
 }
