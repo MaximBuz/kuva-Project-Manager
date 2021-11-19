@@ -11,7 +11,7 @@ import styled from 'styled-components';
 
 const CommentHistory = styled.div`
     width: 100%;
-    height: 238px;
+    height: 260px;
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
@@ -23,7 +23,7 @@ const ForeignComment = styled.div`
     align-items: flex-start;
     justify-content: left;
     gap: 10px;
-    padding: 10px;
+    margin-bottom: 12px;
     box-sizing: border-box;
 `
 
@@ -33,7 +33,8 @@ const OwnComment = styled.div`
     align-items: flex-start;
     justify-content: right;
     gap: 10px;
-    padding: 10px;
+    margin-bottom: 12px;
+    margin-right: 12px;
     box-sizing: border-box;
 `
 
@@ -76,7 +77,18 @@ const ChatTimeStamp = styled.div`
     font-size: 0.6rem;
     color: grey;
 `
-
+const Input = styled.input`
+    border-radius: 15px;
+    width: 100%;
+    margin-top: 11px;
+    box-sizing: border-box;
+    border-style: solid;
+    border-color: rgb(221, 221, 221);
+    border-width: thin;
+    padding: 10px 15px 10px 15px;
+    font-size: small;
+    color: grey;
+`
 
 function Modal({ closeModal, task }) {
 
@@ -202,7 +214,7 @@ function Modal({ closeModal, task }) {
                                     </CommentHistory>
                                     <div>
                                         <form onSubmit={handleChatSubmit}>
-                                            <input type="text" placeholder="Add a comment..." onChange={handleInputChange} value={comment}></input>
+                                            <Input type="text" placeholder="Add a comment..." onChange={handleInputChange} value={comment}></Input>
                                         </form>
                                     </div>
                                 </div>
