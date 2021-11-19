@@ -46,7 +46,8 @@ function Modal({ closeModal, task }) {
     const handleChatSubmit = async (e) => {
         console.log("enter funzt")
         e.preventDefault();
-        await dispatch(addTaskCommentInitiate(task.id, currentUser.uid, comment))
+        await dispatch(addTaskCommentInitiate(task.id, currentUser.uid, comment));
+        setComment("");
     }
 
     return ReactDom.createPortal(
@@ -106,7 +107,7 @@ function Modal({ closeModal, task }) {
                                     </div>
                                     <div>
                                         <form onSubmit={handleChatSubmit}>
-                                            <input type="text" placeholder="Add a comment..." onChange={handleInputChange}></input>
+                                            <input type="text" placeholder="Add a comment..." onChange={handleInputChange} value={comment}></input>
                                         </form>
                                     </div>
                                 </div>
