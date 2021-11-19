@@ -120,7 +120,7 @@ export const addTaskCommentInitiate = (taskId, user, comment) => {
             user: {
                 id: user.uid,
                 displayName: user.displayName,
-                photo: user.photoUrl
+                photoUrl: user.photoURL
             },
             comment: comment,
             timeStamp:Timestamp.now()

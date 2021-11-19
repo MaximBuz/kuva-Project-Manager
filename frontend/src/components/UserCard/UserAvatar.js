@@ -20,11 +20,11 @@ const UserProfilePicture = styled.img`
     height: 100%;
 `
 
-function UserAvatar({name, url}) {
+function UserAvatar({inComments, name, url}) {
     return (
-        <UserCardAvatar>
+        <UserCardAvatar inComments={inComments} url={url}>
             { url ?
-                <UserProfilePicture src={url}/>
+                <UserProfilePicture inComments={inComments} src={url}/>
                 : name?.split(" ").map((n)=>n[0]).join(" ")
             }
         </UserCardAvatar>

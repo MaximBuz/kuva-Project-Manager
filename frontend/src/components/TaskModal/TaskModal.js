@@ -1,11 +1,82 @@
 import ReactDom from "react-dom";
+import moment from 'moment';
 import {useState, useEffect} from "react";
 import "./TaskModal.css"
 import UserCard from "../UserCard/UserCard";
 import UserAvatar from "../UserCard/UserAvatar";
 import { useDispatch, useSelector} from "react-redux";
-// import {useState} from "react"
 import {deleteTaskInitiate, addTaskCommentInitiate, getTaskCommentsInitiate} from "../../redux/tasks/tasks.actions";
+
+import styled from 'styled-components';
+
+const CommentHistory = styled.div`
+    width: 100%;
+    height: 238px;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+`
+
+const ForeignComment = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: left;
+    gap: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+`
+
+const OwnComment = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: right;
+    gap: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+`
+
+const OwnCommentBubble = styled.div`
+    background-color: #eeedfa;
+    border-radius: 10px;
+    box-sizing: border-box;
+    padding: 10px;
+    width: 57%;
+    height: fit-content;
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+`
+
+const ForeignUserName = styled.div`
+    text-align: left;
+    width: 100%;
+    height: fit-content;
+    color: #35307E;
+    font-weight: bold;
+`
+
+const ForeignCommentBubble = styled.div`
+    border-style: solid;
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: #D3D3D3;
+    box-sizing: border-box;
+    padding: 10px;
+    width: 57%;
+    height: fit-content;
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+`
+const ChatTimeStamp = styled.div`
+    font-size: 0.6rem;
+    color: grey;
+`
+
 
 function Modal({ closeModal, task }) {
 
@@ -93,22 +164,42 @@ function Modal({ closeModal, task }) {
                             <div className="comments-area section">
                                 <h3>Activity</h3>
                                 <div>
-                                    <div>
-                                        {taskComments && taskComments.map((comment, index) => {
-                                            if (comment.userId == currentUser.uid) {
+                                    <CommentHistory>
+                                        {taskComments && taskComments.sort((a,b) => {
+                                            if (a.timeStamp < b.timeStamp) {
+                                                return -1
+                                            } else {
+                                                return 1
+                                            }
+                                        }).map((comment, index) => {
+                                            if (comment.user.id === currentUser.uid) {
                                                 return(
-                                                    <div>
-                                                        <UserAvatar name={task.author?.name || ""} url={task.author?.photoUrl || ""} />
-                                                        {comment.comment}
-                                                    </div>
+                                                    <OwnComment>
+                                                        <OwnCommentBubble>
+                                                            {comment.comment}
+                                                            <ChatTimeStamp>
+                                                                {moment(new Date(comment.timeStamp.seconds*1000)).fromNow().toString()}
+                                                            </ChatTimeStamp>
+                                                        </OwnCommentBubble>
+                                                    </OwnComment>
                                                 )
                                             } else {
                                                 return(
-                                                    <div>{comment.comment}</div>
+                                                    <ForeignComment>
+                                                        <ForeignCommentBubble>
+                                                            <ForeignUserName>
+                                                                {comment.user.displayName}
+                                                            </ForeignUserName>
+                                                            {comment.comment}
+                                                            <ChatTimeStamp>
+                                                                {moment(new Date(comment.timeStamp.seconds*1000)).fromNow().toString()}
+                                                            </ChatTimeStamp>
+                                                        </ForeignCommentBubble>
+                                                    </ForeignComment>
                                                 )
                                             }
                                         })}
-                                    </div>
+                                    </CommentHistory>
                                     <div>
                                         <form onSubmit={handleChatSubmit}>
                                             <input type="text" placeholder="Add a comment..." onChange={handleInputChange} value={comment}></input>
