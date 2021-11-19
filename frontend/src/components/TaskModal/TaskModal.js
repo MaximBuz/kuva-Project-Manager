@@ -1,7 +1,8 @@
 import ReactDom from "react-dom";
 import {useState, useEffect} from "react";
 import "./TaskModal.css"
-import UserCard from "../UserCard/UserCard"
+import UserCard from "../UserCard/UserCard";
+import UserAvatar from "../UserCard/UserAvatar";
 import { useDispatch, useSelector} from "react-redux";
 // import {useState} from "react"
 import {deleteTaskInitiate, addTaskCommentInitiate, getTaskCommentsInitiate} from "../../redux/tasks/tasks.actions";
@@ -46,7 +47,7 @@ function Modal({ closeModal, task }) {
     const handleChatSubmit = async (e) => {
         console.log("enter funzt")
         e.preventDefault();
-        await dispatch(addTaskCommentInitiate(task.id, currentUser.uid, comment));
+        await dispatch(addTaskCommentInitiate(task.id, currentUser, comment));
         setComment("");
     }
 
@@ -96,11 +97,14 @@ function Modal({ closeModal, task }) {
                                         {taskComments && taskComments.map((comment, index) => {
                                             if (comment.userId == currentUser.uid) {
                                                 return(
-                                                    <div>{comment.comment} von User</div>
+                                                    <div>
+                                                        <UserAvatar name={task.author?.name || ""} url={task.author?.photoUrl || ""} />
+                                                        {comment.comment}
+                                                    </div>
                                                 )
                                             } else {
                                                 return(
-                                                    <div>{comment.comment} von Anderen</div>
+                                                    <div>{comment.comment}</div>
                                                 )
                                             }
                                         })}

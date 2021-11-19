@@ -113,12 +113,17 @@ export const getTaskCommentsInitiate = (taskId) => {
     }
 } 
 
-export const addTaskCommentInitiate = (taskId, userId, comment) => {
+export const addTaskCommentInitiate = (taskId, user, comment) => {
     return async (dispatch) => {
         await addDoc(collection(db, "taskComments"), {
             taskId: taskId,
-            userId: userId,
-            comment: comment
+            user: {
+                id: user.uid,
+                displayName: user.displayName,
+                photo: user.photoUrl
+            },
+            comment: comment,
+            timeStamp:Timestamp.now()
         });
         dispatch(addTaskComment());
     }
