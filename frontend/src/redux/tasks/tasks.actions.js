@@ -1,6 +1,6 @@
 import tasksTypes from './tasks.types';
 import {db} from "../../firebase-config";
-import { collection, addDoc, Timestamp, query, onSnapshot, where, deleteDoc, doc, updateDoc} from "firebase/firestore"; 
+import { collection, addDoc, Timestamp, query, onSnapshot, where, deleteDoc, doc, updateDoc, getDoc, setDoc} from "firebase/firestore"; 
 import { store } from "../store";
 
 const getTasks = (tasks) => ({
@@ -18,6 +18,15 @@ const updateTask = () => ({
 
 const deleteTask = () => ({
   type: tasksTypes.DELETE_TASK
+})
+
+const getTaskComments = (taskComments) => ({
+    type: tasksTypes.GET_COMMENTS,
+    payload: taskComments
+})
+
+const addTaskComment = () => ({
+    type: tasksTypes.COMMENT_TASK
 })
 
 // Befüllt den Payload des action-creators mit tasks ausm Firestore
@@ -40,10 +49,19 @@ export const getTasksInitiate = (projectId) => {
 
 export const addTaskInitiate = (task) => {
     return async function(dispatch) {
-        const docRef = await addDoc(collection(db, "tasks"), {
+        const authorRef = doc(db, "users", task.userId);
+        const authorSnap = await getDoc(authorRef);
+        const author = authorSnap?.data() || null
+        await addDoc(collection(db, "tasks"), {
             identifier: task.identifier,
             projectId: task.projectId,
-            userId:task.userId,
+            author: {
+                name: author?.displayName || "No Author",
+                email: author?.email || "No Email",
+                jobTitle: author?.jobTitle || "No Job Title",
+                photoUrl: author?.photoUrl || null
+            },
+            userId: task.userId,
             taskAssignedTo:task.taskAssignedTo,
             taskTitle:task.taskTitle,
             timeStamp:Timestamp.now(),
@@ -76,5 +94,32 @@ export const deleteTaskInitiate = (taskId) => {
     return async function(dispatch) {
         await deleteDoc(doc(db, "tasks", taskId))
         dispatch(deleteTask());
+    }
+}
+
+export const getTaskCommentsInitiate = (taskId) => {
+    return async (dispatch) => {
+        const q = query(
+            collection(db, "taskComments"),
+            where("taskId", "==", taskId)
+            );
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const taskComments = [];
+            querySnapshot.forEach((doc) => {
+                taskComments.push({...doc.data(), id: doc.id})
+            })
+            dispatch(getTaskComments(taskComments));
+        })
+    }
+} 
+
+export const addTaskCommentInitiate = (taskId, userId, comment) => {
+    return async (dispatch) => {
+        await addDoc(collection(db, "taskComments"), {
+            taskId: taskId,
+            userId: userId,
+            comment: comment
+        });
+        dispatch(addTaskComment());
     }
 }

@@ -1,11 +1,14 @@
 import ReactDom from "react-dom";
+import {useState, useEffect} from "react";
 import "./TaskModal.css"
 import UserCard from "../UserCard/UserCard"
 import { useDispatch, useSelector} from "react-redux";
 // import {useState} from "react"
-import {deleteTaskInitiate} from "../../redux/tasks/tasks.actions";
+import {deleteTaskInitiate, addTaskCommentInitiate, getTaskCommentsInitiate} from "../../redux/tasks/tasks.actions";
 
 function Modal({ closeModal, task }) {
+
+    const {currentUser} = useSelector(state => state.user)
 
     let priority = task.taskPriority || ""
     let priorityColor;
@@ -18,6 +21,32 @@ function Modal({ closeModal, task }) {
         closeModal()
         await dispatch(deleteTaskInitiate(task.id));
         window.location.reload(true);
+    }
+
+
+    /* 
+    ----------------------------
+    Handling the comment section 
+    ----------------------------
+    */
+
+    // getting previous comments
+    const {taskComments} = useSelector(state => state.tasks)
+    useEffect( () => {
+        return dispatch(getTaskCommentsInitiate(task.id));
+    }, [task.id])
+
+    // adding new comments
+    const [comment, setComment] = useState("");
+
+    const handleInputChange = (e) => {
+        setComment(e.target.value);
+    }
+
+    const handleChatSubmit = async (e) => {
+        console.log("enter funzt")
+        e.preventDefault();
+        await dispatch(addTaskCommentInitiate(task.id, currentUser.uid, comment))
     }
 
     return ReactDom.createPortal(
@@ -61,7 +90,26 @@ function Modal({ closeModal, task }) {
                             </div>
                             <div className="comments-area section">
                                 <h3>Activity</h3>
-                                <p>CHATAREA</p>
+                                <div>
+                                    <div>
+                                        {taskComments && taskComments.map((comment, index) => {
+                                            if (comment.userId == currentUser.uid) {
+                                                return(
+                                                    <div>{comment.comment} von User</div>
+                                                )
+                                            } else {
+                                                return(
+                                                    <div>{comment.comment} von Anderen</div>
+                                                )
+                                            }
+                                        })}
+                                    </div>
+                                    <div>
+                                        <form onSubmit={handleChatSubmit}>
+                                            <input type="text" placeholder="Add a comment..." onChange={handleInputChange}></input>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -82,13 +130,13 @@ function Modal({ closeModal, task }) {
                             
                             <div className="assigned-to section">
                                 <h3>Assigned To</h3>
-                                <UserCard></UserCard>
-                                <UserCard></UserCard>
+                                <UserCard taskAuthor={task.author || ""}></UserCard>
+                                <UserCard taskAuthor={task.author || ""}></UserCard>
                             </div>
                             
                             <div className="author section">
                                 <h3>Author</h3>
-                                <UserCard></UserCard>
+                                <UserCard taskAuthor={task.author || ""}></UserCard>
                             </div>
                             
                         </div>

@@ -27,6 +27,14 @@ const UserCardAvatar = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+`
+
+const UserProfilePicture = styled.img`
+    object-fit: contain;
+    object-position: 50% 50%;
+    width: 100%;
+    height: 100%;
 `
 
 const UserCardTextWrapper = styled.div`
@@ -44,16 +52,18 @@ const UserCardJob = styled.p`
     color: #FF0ABA;
 `
 
-function UserCard(props) {
+function UserCard({taskAuthor}) {
     return (
         <UserCardWrapper>
             <UserCardAvatar>
-                MB
-                {/* initials from props */}
+                { taskAuthor?.photoUrl ?
+                    <UserProfilePicture src={taskAuthor?.photoUrl}/>
+                    : "MB"
+                }
             </UserCardAvatar>
             <UserCardTextWrapper>
-                <UserCardName>Maxim Buz{/* Name from props */}</UserCardName>
-                <UserCardJob>Product Manager{/* Job from props */}</UserCardJob>
+                <UserCardName>{taskAuthor?.name}</UserCardName>
+                <UserCardJob>{taskAuthor?.jobTitle}</UserCardJob>
             </UserCardTextWrapper>
         </UserCardWrapper>
     )

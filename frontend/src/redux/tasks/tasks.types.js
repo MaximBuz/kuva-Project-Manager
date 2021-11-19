@@ -3,7 +3,9 @@ const tasksTypes = {
   DELETE_TASK: "DELETE_TASK",
   UPDATE_TASK: "UPDATE_TASK",
   GET_TASKS: "GET_TASKS",
-  GET_TASK: "GET_TASK"
+  GET_TASK: "GET_TASK",
+  GET_COMMENTS: "GET_COMMENTS",
+  COMMENT_TASK: "COMMENT_TASK"
 };
   
   export default tasksTypes;

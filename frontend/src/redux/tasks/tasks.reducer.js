@@ -24,6 +24,15 @@ const taskReducer = (state = INITIAL_STATE, action) => {
         return {
             ...state
         };
+    case tasksTypes.GET_COMMENTS:
+        return {
+            ...state,
+            taskComments: action.payload
+        };
+    case tasksTypes.COMMENT_TASK:
+        return {
+            ...state
+        };
     default:
         return state;
   }
