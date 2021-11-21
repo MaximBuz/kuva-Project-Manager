@@ -1,4 +1,4 @@
-import MenuItem from "./MenuItem/MenuItem";
+import MenuItem from "./MenuItem";
 import styled from "styled-components";
 
 const LeftMenuWrapper = styled.div`

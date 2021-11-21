@@ -1,9 +1,9 @@
 import './ProjectsOverview.css';
 import ProjectCard from "../ProjectCard/ProjectCard"
-import CounterBlob from "../CounterBlob/CounterBlob";
+import CounterBlob from "../CounterBlob";
 import { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import Modal from "../NewProjectModal/NewProjectModal"
+import Modal from "../NewProjectModal"
 import { getProjectsInitiate } from '../../redux/projects/projects.actions';
 import moment from 'moment';
 import { UilPlusCircle } from '@iconscout/react-unicons';

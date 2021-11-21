@@ -1,8 +1,8 @@
 import React from 'react'
 import TaskRow from "../../components/TaskRow/TaskRow";
-import CounterBlob from "../../components/CounterBlob/CounterBlob";
+import CounterBlob from "../../components/CounterBlob";
 import "./styles.css";
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { getTasksInitiate, updateTaskInitiate } from '../../redux/tasks/tasks.actions';

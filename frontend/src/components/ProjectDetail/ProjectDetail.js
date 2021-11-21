@@ -1,7 +1,7 @@
 import './ProjectDetail.css';
 import { useHistory, useParams } from 'react-router-dom';
 import TaskCard from "../TaskCard/TaskCard";
-import CounterBlob from "../CounterBlob/CounterBlob"
+import CounterBlob from "../CounterBlob";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { getTasksInitiate, getTasks, updateTaskInitiate} from '../../redux/tasks/tasks.actions';
