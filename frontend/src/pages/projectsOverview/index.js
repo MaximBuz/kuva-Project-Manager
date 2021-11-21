@@ -1,5 +1,5 @@
 import React from 'react'
-import ProjectsOverview from "../../components/ProjectOverview/ProjectsOverview"
+import ProjectsOverview from "../../components/ProjectsOverview"
 
 export default function ProjectsOverviewPage() {
     return (

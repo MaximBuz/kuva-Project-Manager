@@ -1,5 +1,5 @@
 import React from 'react'
-import ProjectDetail from "../../components/ProjectDetail/ProjectDetail"
+import ProjectDetail from "../../components/ProjectDetail"
 
 export default function TasksPage() {
     return (

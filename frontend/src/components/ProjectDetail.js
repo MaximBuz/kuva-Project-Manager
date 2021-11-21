@@ -1,12 +1,12 @@
 import { useParams } from 'react-router-dom';
-import TaskCard from "../TaskCard/TaskCard";
-import CounterBlob from "../CounterBlob";
+import TaskCard from "./TaskCard/TaskCard";
+import CounterBlob from "./CounterBlob";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import { getTasksInitiate, updateTaskInitiate} from '../../redux/tasks/tasks.actions';
+import { getTasksInitiate, updateTaskInitiate} from '../redux/tasks/tasks.actions';
 import {DragDropContext} from "react-beautiful-dnd";
 import {Droppable} from "react-beautiful-dnd";
-import TaskModal from "../TaskModal/TaskModal";
+import TaskModal from "./TaskModal/TaskModal";
 
 import styled from "styled-components";
 
