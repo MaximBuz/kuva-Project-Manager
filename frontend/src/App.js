@@ -20,7 +20,8 @@ import LoginPage from './pages/login/index';
 import MainLayout from "./layouts/MainLayout"
 import {
   projectsOverviewItems,
-  projectDetailItems
+  ProjectTaskOverviewItems,
+  ProjectBacklogItems
 } from "./components/menus/LeftMenu/MenuContents";
 
 // Firebase
@@ -66,7 +67,7 @@ const App = (props) => {
               <Route
                 exact path="/project/:identifier"
                 render={(props) => (
-                  <MainLayout menuContent={projectDetailItems} {...props}>  
+                  <MainLayout menuContent={ProjectTaskOverviewItems} {...props}>  
                     <TasksPage/>
                   </MainLayout>  
                 )}
@@ -75,7 +76,7 @@ const App = (props) => {
               <Route
                 path="/project/:identifier/backlog"
                 render={(props) => (
-                  <MainLayout menuContent={projectDetailItems} {...props}>  
+                  <MainLayout menuContent={ProjectBacklogItems} {...props}>  
                     <BacklogPage/>
                   </MainLayout>  
                 )}

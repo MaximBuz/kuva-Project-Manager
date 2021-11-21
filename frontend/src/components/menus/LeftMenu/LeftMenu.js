@@ -1,10 +1,21 @@
-import "./LeftMenu.css"
 import MenuItem from "./MenuItem/MenuItem";
- 
+import styled from "styled-components";
+
+const LeftMenuWrapper = styled.div`
+    position: absolute;
+    top: 100px;
+    left: 33px;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px;
+    z-index: 100;
+`
 
 function LeftMenu(props) {
+
     return (
-        <div className="menu-left-wrapper">
+        <LeftMenuWrapper>
             {props.items && props.items.map((item, index) => {
                 if(item.link === "/"){
                     return (
@@ -12,7 +23,8 @@ function LeftMenu(props) {
                         key={index} 
                         icon={item.icon} 
                         text={item.text} 
-                        url={item.link} 
+                        url={item.link}
+                        active = {item.active} 
                     />)
                 } else {
                     let newLink = item.link.replace(/{CHANGETHIS}/i, props.projectId)
@@ -21,12 +33,13 @@ function LeftMenu(props) {
                             key={index} 
                             icon={item.icon} 
                             text={item.text} 
-                            url={newLink} 
+                            url={newLink}
+                            active = {item.active} 
                         />)
                 }
                 
                 })}
-        </div>
+        </LeftMenuWrapper>
     )
 }
 

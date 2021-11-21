@@ -13,6 +13,7 @@ const CommentHistory = styled.div`
     width: 100%;
     height: 260px;
     overflow-y: scroll;
+    scroll-snap-type: y;
     display: flex;
     flex-direction: column;
 `
