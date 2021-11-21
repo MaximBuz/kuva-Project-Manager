@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import TaskCard from "./TaskCard/TaskCard";
+import TaskCard from "./TaskCard";
 import CounterBlob from "./CounterBlob";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
