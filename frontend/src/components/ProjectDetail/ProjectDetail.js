@@ -1,20 +1,79 @@
-import './ProjectDetail.css';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import TaskCard from "../TaskCard/TaskCard";
 import CounterBlob from "../CounterBlob";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import { getTasksInitiate, getTasks, updateTaskInitiate} from '../../redux/tasks/tasks.actions';
+import { getTasksInitiate, updateTaskInitiate} from '../../redux/tasks/tasks.actions';
 import {DragDropContext} from "react-beautiful-dnd";
 import {Droppable} from "react-beautiful-dnd";
-import TaskModal from "../TaskModal/TaskModal"
+import TaskModal from "../TaskModal/TaskModal";
+
+import styled from "styled-components";
+
+const FilterSection = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    margin-bottom: 20px;
+`
+
+const SearchField = styled.input`
+    border-radius: 1000px;
+    width: 200px;
+    border-style: solid;
+    border-color: rgb(221, 221, 221);
+    border-width: thin;
+    padding: 6px 15px 6px 15px;
+    font-size: large;
+    color: grey;
+`
+
+const ColumnsWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 15px;
+`
+
+const Column = styled.div`
+    padding: 20px 10px 30px 10px;
+    background-color: white;
+    border-style: solid;
+    border-color: rgb(221, 221, 221);
+    border-width: thin;
+    border-radius: 25px;
+    min-height: 75vh;
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+`
+
+const ColumnTitleRow = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    min-height: 40px;
+
+    h2 {
+        font-size: 20px;
+        font-weight: 500;
+        color: #35307E;
+        transition: 0.15s;
+    }
+`
 
 function ProjectDetail() {
 
-    /* Handle opening modal for viewing a tasks
-       ------------------------------------------------
-       - setOpenModal wird als prop zum Modal selbst runtergeschickt 
-       ------------------------------------------------ */
+    /*
+    Handle opening modal for viewing a tasks
+    ------------------------------------------------
+    - setOpenModal wird als prop zum Modal selbst runtergeschickt 
+    ------------------------------------------------
+    */
     const [openModal, setOpenModal] = useState("");
 
     
@@ -76,6 +135,8 @@ function ProjectDetail() {
                 case "completed-column":
                     newTaskArr = [...tasksCompleted]
                     break;
+                default:
+                    break;
             }
             // change the task order within that column
             let temp = newTaskArr.splice(source.index, 1);
@@ -94,6 +155,8 @@ function ProjectDetail() {
                     break;
                 case "completed-column":
                     setTasksCompleted(newTaskArr)
+                    break;
+                default:
                     break;
             }
             // TODO: State persistance with database (save the index to the task document)
@@ -117,6 +180,8 @@ function ProjectDetail() {
                 case "completed-column":
                     startSourceTasks = [...tasksCompleted]
                     break;
+                default:
+                    break;
             }
 
             // delete the tasks within the startSourceTasks
@@ -135,6 +200,8 @@ function ProjectDetail() {
                     break;
                 case "completed-column":
                     setTasksCompleted(startSourceTasks)
+                    break;
+                default:
                     break;
             }
 
@@ -164,6 +231,8 @@ function ProjectDetail() {
                     temp.status = "Completed"
                     dispatch(updateTaskInitiate(temp))
                     break;
+                default:
+                    break;
             }
 
             // add the previously deleted task from startSourcetask to the new column
@@ -183,6 +252,8 @@ function ProjectDetail() {
                 case "completed-column":
                     setTasksCompleted(startDestinationTasks)
                     break;
+                default:
+                    break;
             }
         }
         
@@ -191,22 +262,22 @@ function ProjectDetail() {
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <div>
-                <div className="task-filter-section">
-                    <p>Search Tasks <span><input type="text" className="search-field"></input></span></p>
-                    <div className="filter-checkbox">
-                    </div>
-                </div>
-                <div className="status-columns">
+                <FilterSection>
+                    <p>Search Tasks <span><SearchField type="text"></SearchField></span></p>
+                    {/* <div className="filter-checkbox">
+                    </div> */}
+                </FilterSection>
+                <ColumnsWrapper>
 
-                    <div className="selected-for-development column">
-                        <div className="column-title-row">
+                    <Column>
+                        <ColumnTitleRow>
                             <h2>Selected For Development</h2>
                             <CounterBlob count={countSelected}/>
-                        </div>
+                        </ColumnTitleRow>
                         <Droppable droppableId={"selected-for-development-column"}>
                             {(provided, snapshot) => (
                                 <div 
-                                    className="task-list"
+                                    style={{display: "flex", flexDirection:"column", height:"100%"}}
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
                                     isDraggingOver={snapshot.isDraggingOver}
@@ -242,17 +313,17 @@ function ProjectDetail() {
                                 </div>
                             )}
                         </Droppable>
-                    </div>
+                    </Column>
 
-                    <div className="in-progress column">
-                        <div className="column-title-row">
+                    <Column>
+                        <ColumnTitleRow>
                             <h2>In Progress</h2>
                             <CounterBlob count={countInProgress}/>
-                        </div>
+                        </ColumnTitleRow>
                         <Droppable droppableId={"in-progress-column"}>
                             {(provided, snapshot) => (
                                 <div 
-                                    className="task-list"
+                                    style={{display: "flex", flexDirection:"column", height:"100%"}}
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
                                     isDraggingOver={snapshot.isDraggingOver}
@@ -281,17 +352,17 @@ function ProjectDetail() {
                                 </div>
                             )}
                         </Droppable>
-                    </div>
+                    </Column>
 
-                    <div className="in-review column">
-                        <div className="column-title-row">
+                    <Column>
+                        <ColumnTitleRow>
                             <h2>In Review</h2>
                             <CounterBlob count={countInReview}/>
-                        </div>
+                        </ColumnTitleRow>
                         <Droppable droppableId={"in-review-column"}>
                             {(provided, snapshot) => (
                                 <div 
-                                    className="task-list"
+                                    style={{display: "flex", flexDirection:"column", height:"100%"}}
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
                                     isDraggingOver={snapshot.isDraggingOver}
@@ -320,17 +391,17 @@ function ProjectDetail() {
                                 </div>
                             )}
                         </Droppable>            
-                    </div>
+                    </Column>
 
-                    <div className="completed column">
-                        <div className="column-title-row">
+                    <Column>
+                        <ColumnTitleRow>
                             <h2>Completed</h2>
                             <CounterBlob count={countCompleted}/>
-                        </div>
+                        </ColumnTitleRow>
                         <Droppable droppableId={"completed-column"}>
                             {(provided, snapshot) => (
                                 <div 
-                                    className="task-list"
+                                    style={{display: "flex", flexDirection:"column", height:"100%"}}
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
                                     isDraggingOver={snapshot.isDraggingOver}
@@ -360,8 +431,8 @@ function ProjectDetail() {
                             )}
                         </Droppable>
                         {openModal && <TaskModal closeModal={setOpenModal} task={tasks.filter(item => item.id === openModal)[0] }/>}
-                    </div>
-                </div>
+                    </Column>
+                </ColumnsWrapper>
             </div>
         </DragDropContext>
     )
