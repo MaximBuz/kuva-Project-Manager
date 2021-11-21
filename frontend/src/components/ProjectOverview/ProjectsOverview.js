@@ -1,5 +1,5 @@
 import './ProjectsOverview.css';
-import ProjectCard from "../ProjectCard/ProjectCard"
+import ProjectCard from "../ProjectCard"
 import CounterBlob from "../CounterBlob";
 import { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux";
