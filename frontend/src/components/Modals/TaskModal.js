@@ -168,13 +168,13 @@ function Modal({ closeModal, task }) {
 
               <SubSection>
                 <h3>Assigned To</h3>
-                <UserCard taskAuthor={task.author || ""}></UserCard>
-                <UserCard taskAuthor={task.author || ""}></UserCard>
+                <UserCard user={task.displayName || ""}></UserCard>
+                <UserCard user={task.displayName || ""}></UserCard>
               </SubSection>
 
               <SubSection>
                 <h3>Author</h3>
-                <UserCard taskAuthor={task.author || ""}></UserCard>
+                <UserCard user={task.displayName || ""}></UserCard>
               </SubSection>
             </RightSection>
           </Content>

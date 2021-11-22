@@ -5,6 +5,7 @@ const UserCardWrapper = styled.div`
   height: fit-content;
   width: 100%;
   min-width: 200px;
+  max-width: 300px;
   display: flex;
   flex-direction: row;
   gap: 10px;
@@ -16,6 +17,8 @@ const UserCardWrapper = styled.div`
   border-color: #d3d3d3;
   box-sizing: border-box;
   padding: 10px;
+  background-color: white;
+  cursor: pointer;
 `;
 
 const UserCardTextWrapper = styled.div`
@@ -33,16 +36,16 @@ const UserCardJob = styled.p`
   color: #ff0aba;
 `;
 
-function UserCard({ taskAuthor }) {
+function UserCard({ user }) {
   return (
     <UserCardWrapper>
       <UserCardAvatar
-        name={taskAuthor?.name || null}
-        url={taskAuthor?.photoUrl || null}
+        name={user?.name || null}
+        url={user?.photoUrl || null}
       />
       <UserCardTextWrapper>
-        <UserCardName>{taskAuthor?.name || null}</UserCardName>
-        <UserCardJob>{taskAuthor?.jobTitle || null}</UserCardJob>
+        <UserCardName>{user?.displayName || null}</UserCardName>
+        <UserCardJob>{user?.jobTitle || null}</UserCardJob>
       </UserCardTextWrapper>
     </UserCardWrapper>
   );

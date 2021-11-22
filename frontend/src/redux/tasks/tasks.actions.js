@@ -56,7 +56,7 @@ export const addTaskInitiate = (task) => {
             identifier: task.identifier,
             projectId: task.projectId,
             author: {
-                name: author?.displayName || "No Author",
+                displayName: author?.displayName || "No Author",
                 email: author?.email || "No Email",
                 jobTitle: author?.jobTitle || "No Job Title",
                 photoUrl: author?.photoUrl || null

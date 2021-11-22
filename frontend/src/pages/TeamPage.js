@@ -1,6 +1,11 @@
 import styled from "styled-components";
 import UserCard from "../components/Cards/UserCard";
 import CounterBlob from "../components/Misc/CounterBlob";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {getMembersInitiate} from "../redux/team/team.actions";
+import { useParams } from "react-router-dom";
+import { localeData } from "moment";
 
 const FilterSection = styled.div`
   display: flex;
@@ -35,9 +40,25 @@ const MemberCounter = styled.div`
   }
 `;
 
+const UserList = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 20px 20px 20px 0px;
+`
+
 function TeamPage(props) {
 
-  let memberCount = 1;
+  const { identifier } = useParams();
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+   dispatch(getMembersInitiate(identifier));
+  }, [identifier]);
+
+  const { members } = useSelector((state) => state.team);
+
+  let memberCount = members.length;
   
   return (
     <div>
@@ -55,7 +76,12 @@ function TeamPage(props) {
         <h2>Your Team-Members</h2>
         {memberCount && <CounterBlob count={memberCount} />}
       </MemberCounter>
-    
+      <UserList>
+        {members.map((member) => {
+          return <UserCard user={member}></UserCard>
+        })}
+      </UserList>              
+      
     </div>
   );
 }
