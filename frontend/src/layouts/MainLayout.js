@@ -1,5 +1,7 @@
-import LeftMenu from "../components/menus/LeftMenu/LeftMenu";
-import TopMenu from "../components/menus/TopMenu/TopMenu";
+import LeftMenu from "../components/Menus/LeftMenu/LeftMenu";
+import TopMenu from "../components/Menus/TopMenu/TopMenu";
+
+import styled from "styled-components";
 
 export default function MainLayout(props) {
     const { identifier } = props.match ? props.match.params : "";
@@ -7,9 +9,26 @@ export default function MainLayout(props) {
         <div>
             <TopMenu projectId={identifier}/>
             <LeftMenu items={props.menuContent} projectId={identifier}/>
-            <div className="content-wrapper">
+            <ContentWrapper>
                 {props.children}
-            </div>
+            </ContentWrapper>
         </div>
     )
 }
+
+const ContentWrapper = styled.div`
+    position: fixed;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    top: 60px;
+    right: 0;
+    left: 100px;
+    bottom: 0;
+    padding: 50px;
+    border-top-left-radius: 50px;
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.25); 
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.25);
+    background-color: #F8F9FF;
+`
+
+

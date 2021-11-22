@@ -1,6 +1,6 @@
 import { getAuth } from "firebase/auth";
 import { useState } from "react";
-import Modal from "../../NewTaskModal/NewTaskModal";
+import Modal from "../../Modals/NewTaskModal";
 
 import styled from "styled-components";
 

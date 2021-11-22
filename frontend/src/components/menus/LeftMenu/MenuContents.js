@@ -15,7 +15,7 @@ const backlogIcon = <UilSchedule/>;
 
 export const projectsOverviewItems = [{
     icon: projectsIcon,
-    text: "All Projects",
+    text: "Projects",
     link: "/",
     active: true
 },{
@@ -28,12 +28,12 @@ export const projectsOverviewItems = [{
 
 export const ProjectTaskOverviewItems = [{
     icon: projectsIcon,
-    text: "All Projects",
+    text: "Projects",
     link: "/",
     active: false
 },{
     icon: tasksIcon,
-    text: "Project Overview",
+    text: "Tasks",
     // link wird im MenuItem component erweitet
     link: "/project/{CHANGETHIS}/",
     active: true
@@ -45,7 +45,7 @@ export const ProjectTaskOverviewItems = [{
     active: false
 },{
     icon: collaboratorsIcon,
-    text: "Team Members",
+    text: "Team",
     // link wird im MenuItem component erweitet
     link: "collaborators",
     active: false
@@ -54,12 +54,12 @@ export const ProjectTaskOverviewItems = [{
 
 export const ProjectBacklogItems = [{
     icon: projectsIcon,
-    text: "All Projects",
+    text: "Projects",
     link: "/",
     active: false
 },{
     icon: tasksIcon,
-    text: "Project Overview",
+    text: "Tasks",
     // link wird im MenuItem component erweitet
     link: "/project/{CHANGETHIS}/",
     active: false
@@ -71,7 +71,7 @@ export const ProjectBacklogItems = [{
     active: true
 },{
     icon: collaboratorsIcon,
-    text: "Team Members",
+    text: "Team",
     // link wird im MenuItem component erweitet
     link: "collaborators",
     active: false

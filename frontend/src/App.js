@@ -11,22 +11,22 @@ import {
 
 
 // Pages
-import ProjectsOverviewPage from "./pages/projectsOverview/index";
-import TasksPage from "./pages/tasks/index";
-import LeftMenu from "./components/menus/LeftMenu/LeftMenu";
+import ProjectsPage from "./pages/ProjectsPage";
+import TasksPage from "./pages/TasksPage";
 import LoginPage from './pages/login/index';
 
 // Layouts
-import MainLayout from "./layouts/MainLayout"
+import MainLayout from "./layouts/MainLayout";
+
 import {
   projectsOverviewItems,
   ProjectTaskOverviewItems,
   ProjectBacklogItems
-} from "./components/menus/LeftMenu/MenuContents";
+} from "./components/Menus/LeftMenu/MenuContents";
 
 // Firebase
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import BacklogPage from './pages/backlog';
+import BacklogPage from './pages/BacklogPage';
 
 // App Component
 const App = (props) => {
@@ -59,7 +59,7 @@ const App = (props) => {
                 exact path="/"
                 render={() => (
                   <MainLayout menuContent={projectsOverviewItems}>
-                    <ProjectsOverviewPage/>   
+                    <ProjectsPage/>   
                   </MainLayout>       
                 )}
               />                
