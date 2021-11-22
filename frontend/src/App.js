@@ -2,7 +2,7 @@ import './App.css';
 
 // React, Redux, Router
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentUser} from './redux/user/user.actions';
+import { setCurrentUserInitiate } from './redux/user/user.actions';
 import { useEffect } from "react";
 import {
   Switch,
@@ -14,6 +14,7 @@ import {
 import ProjectsPage from "./pages/ProjectsPage";
 import TasksPage from "./pages/TasksPage";
 import LoginPage from './pages/login/index';
+import TeamPage from './pages/TeamPage';
 
 // Layouts
 import MainLayout from "./layouts/MainLayout";
@@ -21,7 +22,8 @@ import MainLayout from "./layouts/MainLayout";
 import {
   projectsOverviewItems,
   ProjectTaskOverviewItems,
-  ProjectBacklogItems
+  ProjectBacklogItems,
+  ProjectTeamItems
 } from "./components/Menus/LeftMenu/MenuContents";
 
 // Firebase
@@ -37,9 +39,9 @@ const App = (props) => {
   useEffect(() => {
     const unlisten = onAuthStateChanged(getAuth(), async (user) => {
       if (user) {
-        dispatch(setCurrentUser({...user}));
+        dispatch(setCurrentUserInitiate({...user}));
       } else {
-        dispatch(setCurrentUser(null));
+        dispatch(setCurrentUserInitiate(null));
       }
     });
 
@@ -78,6 +80,15 @@ const App = (props) => {
                 render={(props) => (
                   <MainLayout menuContent={ProjectBacklogItems} {...props}>  
                     <BacklogPage/>
+                  </MainLayout>  
+                )}
+              />
+
+              <Route
+                path="/project/:identifier/team"
+                render={(props) => (
+                  <MainLayout menuContent={ProjectTeamItems} {...props}>  
+                    <TeamPage/>
                   </MainLayout>  
                 )}
               />

@@ -66,7 +66,7 @@ function ProjectsPage() {
         </p>
       </WelcomeWrapper>
       <ProjectCounter>
-        <h2 className="your-projects-text">your projects</h2>
+        <h2>your projects</h2>
         {projectCount && <CounterBlob count={projectCount} />}
       </ProjectCounter>
       <ProjectsWrapper>

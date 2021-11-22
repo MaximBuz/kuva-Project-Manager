@@ -1,13 +1,25 @@
 import userTypes from './user.types';
 import { db, auth, provider } from '../../firebase-config';
 import { signInWithPopup } from "firebase/auth";
-import { setDoc, doc} from "firebase/firestore"; 
+import { setDoc, doc, collection, query, onSnapshot, where, getDoc} from "firebase/firestore"; 
 
-export const setCurrentUser = user => ({
+const setCurrentUser = user => ({
   type: userTypes.SET_CURRENT_USER,
   payload: user
 });
 
+
+export const setCurrentUserInitiate = (user) => {
+  return async function(dispatch) {
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()){
+      dispatch(setCurrentUser({...userSnap.data(), id: userSnap.id}));
+    } else {
+      console.log("No such user!")
+    }
+}
+};
 
 export const signInWithGoogle = () => async (dispatch) => {
   try {

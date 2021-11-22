@@ -101,7 +101,7 @@ function Modal({ closeModal, task }) {
                           }
                         })
                         .map((comment, index) => {
-                          if (comment.user.id === currentUser.uid) {
+                          if (comment.user.id === currentUser.id) {
                             return (
                               <OwnComment>
                                 <OwnCommentBubble>
@@ -328,7 +328,7 @@ const PriorityPill = styled.div`
   margin: 0px;
   width: fit-content;
   height: fit-content;
-  font-size: small;
+  font-size: medium;
   font-weight: 400;
   background-color: ${(props) => {
     if (props.priority === "low") return "#45da5e";

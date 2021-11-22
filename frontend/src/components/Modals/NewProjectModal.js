@@ -132,16 +132,16 @@ function Modal({ closeModal }) {
   const dispatch = useDispatch();
 
   const { currentUser } = useSelector((state) => state.user);
-  const userUID = currentUser.uid;
+  const userID = currentUser.id;
 
   const handleInputChange = (e) => {
     let { name, value } = e.target;
-    setState({ ...state, [name]: value, ["userId"]: userUID });
+    setState({ ...state, [name]: value, ["userId"]: userID });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(addProjectInitiate(state));
+    dispatch(addProjectInitiate(state, currentUser));
     setTimeout(function () {
       closeModal();
     }, 500);

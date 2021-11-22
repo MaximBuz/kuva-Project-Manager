@@ -34,7 +34,7 @@ export const getTasksInitiate = (projectId) => {
   return async function(dispatch) {
       const q = query(
           collection(db, "tasks"),
-          where("userId", "==", store.getState().user.currentUser.uid),
+          where("userId", "==", store.getState().user.currentUser.id),
           where("projectId", "==", projectId)
           );
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -118,7 +118,7 @@ export const addTaskCommentInitiate = (taskId, user, comment) => {
         await addDoc(collection(db, "taskComments"), {
             taskId: taskId,
             user: {
-                id: user.uid,
+                id: user.id,
                 displayName: user.displayName,
                 photoUrl: user.photoURL
             },

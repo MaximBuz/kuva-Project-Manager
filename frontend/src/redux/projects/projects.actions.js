@@ -16,7 +16,7 @@ const addProject = () => ({
 // Befüllt den Payload des action-creators mit Projekten ausm Firestore
 export const getProjectsInitiate = ( user ) => {
   return async function(dispatch) {
-      const q = query(collection(db, "projects"), where("userId", "==", user.uid));
+      const q = query(collection(db, "projects"), where("userId", "==", user.id));
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
           const projects = [];
           querySnapshot.forEach((doc) => {
@@ -28,9 +28,9 @@ export const getProjectsInitiate = ( user ) => {
   }
 }
 
-export const addProjectInitiate = (project) => {
+export const addProjectInitiate = (project, user) => {
   return async function(dispatch) {
-      const docRef = await addDoc(collection(db, "projects"), {
+      const projRef = await addDoc(collection(db, "projects"), {
           projectKey: project.projectKey,
           userId: project.userId,
           collaboratorIds: [],
@@ -38,6 +38,17 @@ export const addProjectInitiate = (project) => {
           timeStamp: Timestamp.now(),
           projectSummary: project.projectSummary,
       });
+      const teamRef = await addDoc(collection(db, "teams"), {
+        projectId: projRef.id,
+        projectOwner: project.userId,
+        collaborators: [{
+          id: user.id,
+          displayName: user.displayName,
+          email: user.email,
+          jobTitle: user.jobTitle,
+          photoUrl: user.photoUrl
+        }]
+    });
       dispatch(addProject());
   }
 }

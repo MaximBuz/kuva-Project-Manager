@@ -150,7 +150,7 @@ function Modal({ closeModal, projectId }) {
 
     let history = useHistory();
     const {currentUser} = useSelector(state => state.user)
-    const userUID = currentUser.uid
+    const userID = currentUser.id
     const userName = currentUser.displayName
 
     const handleInputChange = (e) => {
@@ -158,7 +158,7 @@ function Modal({ closeModal, projectId }) {
         setState({
             ...state,
             [name]: value,
-            ["userId"]: userUID,
+            ["userId"]: userID,
             ["userName"]: userName,
             ["status"]: "backlog",
             ["projectId"]: projectId,

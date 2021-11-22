@@ -47,7 +47,7 @@ export const ProjectTaskOverviewItems = [{
     icon: collaboratorsIcon,
     text: "Team",
     // link wird im MenuItem component erweitet
-    link: "collaborators",
+    link: "team",
     active: false
 }];
 
@@ -73,6 +73,31 @@ export const ProjectBacklogItems = [{
     icon: collaboratorsIcon,
     text: "Team",
     // link wird im MenuItem component erweitet
-    link: "collaborators",
+    link: "team",
     active: false
+}];
+
+
+
+export const ProjectTeamItems = [{
+    icon: projectsIcon,
+    text: "Projects",
+    link: "/",
+    active: false
+},{
+    icon: tasksIcon,
+    text: "Tasks",
+    // link wird im MenuItem component erweitet
+    link: "/project/{CHANGETHIS}/",
+    active: false
+},{
+    icon: backlogIcon,
+    text: "Backlog",
+    link: "backlog",
+    active: false
+},{
+    icon: collaboratorsIcon,
+    text: "Team",
+    link: "team",
+    active: true
 }];
