@@ -8,15 +8,17 @@ const setCurrentUser = user => ({
   payload: user
 });
 
+export const logOutUser = () => ({
+  type: userTypes.LOG_OUT,
+});
+
 
 export const setCurrentUserInitiate = (user) => {
   return async function(dispatch) {
-    const userRef = doc(db, "users", user.uid);
+    const userRef = doc(db, "users", user?.uid || "null");
     const userSnap = await getDoc(userRef);
     if (userSnap.exists()){
       dispatch(setCurrentUser({...userSnap.data(), id: userSnap.id}));
-    } else {
-      console.log("No such user!")
     }
 }
 };

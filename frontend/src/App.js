@@ -2,7 +2,8 @@ import './App.css';
 
 // React, Redux, Router
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentUserInitiate } from './redux/user/user.actions';
+import { setCurrentUserInitiate, logOutUser } from './redux/user/user.actions';
+import { cleanUpTasks } from "./redux/tasks/tasks.actions";
 import { useEffect } from "react";
 import {
   Switch,
@@ -31,7 +32,7 @@ import {
 // Firebase
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import BacklogPage from './pages/BacklogPage';
-import {cleanUpTasks} from "./redux/tasks/tasks.actions";
+
 
 // App Component
 const App = (props) => {
@@ -49,7 +50,7 @@ const App = (props) => {
       if (user) {
         dispatch(setCurrentUserInitiate({...user}));
       } else {
-        dispatch(setCurrentUserInitiate(null));
+        dispatch(logOutUser());
       }
     });
     // unsubscribe on unmount
