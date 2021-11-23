@@ -27,12 +27,16 @@ export const signInWithGoogle = () => async (dispatch) => {
       .then(
         async (result) => {
           let user = result.user;
-          await setDoc(doc(db, "users", user.uid), {
-            displayName: user.displayName,
-            email: user.email,
-            photoUrl: user.photoURL,
-            jobTitle: "No-Job-Title"
-          });
+          // check if user already exists in firestore
+          const userSnap = await getDoc(doc(db, "users", result.user.uid));
+          if (!userSnap.exists()) {
+            await setDoc(doc(db, "users", user.uid), {
+              displayName: user.displayName,
+              email: user.email,
+              photoUrl: user.photoURL,
+              jobTitle: "No-Job-Title"
+            });
+          }
         dispatch({
           type: userTypes.SIGN_IN_SUCCESS,
           payload: true
