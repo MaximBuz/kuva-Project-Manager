@@ -3,6 +3,7 @@ import UserCardAvatar from "../Misc/UserAvatar";
 
 const UserCardWrapper = styled.div`
   height: fit-content;
+  min-height: 72px;
   width: 100%;
   min-width: 200px;
   max-width: 300px;
@@ -18,7 +19,13 @@ const UserCardWrapper = styled.div`
   box-sizing: border-box;
   padding: 10px;
   background-color: white;
+  transition: transform 0.5s;
   cursor: pointer;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
 `;
 
 const UserCardTextWrapper = styled.div`

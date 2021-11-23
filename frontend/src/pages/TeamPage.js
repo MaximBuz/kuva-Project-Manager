@@ -5,7 +5,8 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {getMembersInitiate} from "../redux/team/team.actions";
 import { useParams } from "react-router-dom";
-import { localeData } from "moment";
+import { UilPlusCircle } from "@iconscout/react-unicons";
+import Modal from "../components/Modals/NewTeamMemberModal";
 
 const FilterSection = styled.div`
   display: flex;
@@ -45,17 +46,52 @@ const UserList = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   padding: 20px 20px 20px 0px;
+  gap: 10px;
+`
+
+const AddButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: fit-content;
+  min-height: 72px;
+  width: 100%;
+  min-width: 200px;
+  max-width: 300px;
+  box-sizing: border-box;
+  padding: 10px;
+
+  margin: 5px 0px 5px 0px;
+  border-style: solid;
+  border-radius: 10px;
+  border-width: 1px;
+  border-color: #d3d3d3;
+
+  transition: 0.5s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #35307e;
+    transform: scale(1.05);
+    > * {
+      fill: white;
+    }
+  }
 `
 
 function TeamPage(props) {
 
   const { identifier } = useParams();
 
+  
   const dispatch = useDispatch();
   useEffect(() => {
-   dispatch(getMembersInitiate(identifier));
+    dispatch(getMembersInitiate(identifier));
   }, []);
 
+  const [openModal, setOpenModal] = useState(false);
+  
   const { members } = useSelector((state) => state.team);
 
   let memberCount = members.length;
@@ -80,8 +116,12 @@ function TeamPage(props) {
         {members.map((member) => {
           return <UserCard user={member}></UserCard>
         })}
+        <AddButton onClick={() => {setOpenModal(!openModal)}}>
+          <UilPlusCircle className="add-icon" size="50" color="#51515170" />
+        </AddButton>
       </UserList>              
       
+      {openModal && <Modal closeModal={setOpenModal} projectId={identifier} />}
     </div>
   );
 }
