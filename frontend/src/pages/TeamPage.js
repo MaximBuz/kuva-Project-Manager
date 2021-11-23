@@ -54,7 +54,7 @@ function TeamPage(props) {
   const dispatch = useDispatch();
   useEffect(() => {
    dispatch(getMembersInitiate(identifier));
-  }, [identifier]);
+  }, []);
 
   const { members } = useSelector((state) => state.team);
 

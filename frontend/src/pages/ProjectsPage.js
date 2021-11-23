@@ -7,51 +7,24 @@ import { getProjectsInitiate } from "../redux/projects/projects.actions";
 import moment from "moment";
 import { UilPlusCircle } from "@iconscout/react-unicons";
 
-/* // for counting urgent tasks
-import { store } from "../../redux/store";
-import {db} from "../../firebase-config";
-import { collection, query, where} from "firebase/firestore"; 
- */
-
 import styled from "styled-components";
 
 function ProjectsPage() {
-  /* Öffnen und schließen vom Portal-Modal zum neue Projekte hinzufügen:
-       ------------------------------------------------
-       - setOpenModal wird als prop zum Modal selbst runtergeschickt
-       - hier keine Nutzung vom Redux Store, sondern basic React state
-       ------------------------------------------------ */
+
   const [openModal, setOpenModal] = useState(false);
 
-  /* Redux-Store Abonnieren:
-       ------------------------------------------------
-       - useSelector gibt den Redux-Store zurück, welcher das rootReducer Objekt beinhaltet
-       - Dieser beinhaltet die verschiedenen Reducer als key-value pairs
-       - Man destructured nur den Inhalt aus dem Store, der hier benötigt wird
-       - Immer wenn eine action ausgelöst wird / der Store aktualisiert wird,
-         läuft useSelector nochmal und aktualisiert das Component
-       ------------------------------------------------ */
   const { projects } = useSelector((state) => state.projects);
 
   const { currentUser } = useSelector((state) => state.user);
 
-  /* Beim laden die Projekte aus der Datenbank ziehen:
-       ------------------------------------------------
-       - Dispatched getProjects action-creator, dessen Payload davor durch
-         getProjectsInitiate mit Projekten aus der Datenbank befüllt wird
-       - Action-type: GET_PROJECTS
-       - Action-Payload: Projekte aus dem Firestore
-       ------------------------------------------------ */
   const dispatch = useDispatch();
   useEffect(() => {
     if (currentUser) return dispatch(getProjectsInitiate(currentUser));
-  }, [currentUser]);
+  }, [currentUser, dispatch]);
 
-  // den pinken Blob mit Anzahl aktualisieren
-  // Immer wenn sich die anzahl der Projekte ändert
-  let projectCount = projects.length;
+  let projectCount = projects?.length;
   useEffect(() => {
-    projectCount = projects.length;
+    projectCount = projects?.length;
   }, [projects]);
 
   return (

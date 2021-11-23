@@ -1,8 +1,8 @@
 import projectsTypes from './projects.types';
 
 const INITIAL_STATE = {
-  currentUser: null,
-  signInSuccess: false,
+  projects: [],
+  project: ""
 };
 
 const projectsReducer = (state=INITIAL_STATE, action) => {

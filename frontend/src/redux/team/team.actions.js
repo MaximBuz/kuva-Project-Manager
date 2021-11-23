@@ -1,7 +1,6 @@
 import teamTypes from './team.types';
 import {db} from "../../firebase-config";
 import { collection, addDoc, Timestamp, query, onSnapshot, where, deleteDoc, doc, updateDoc, getDoc, setDoc, getDocs} from "firebase/firestore"; 
-import { store } from "../store";
 
 const getMembers = (teamMembers) => ({
   type: teamTypes.GET_MEMBERS,

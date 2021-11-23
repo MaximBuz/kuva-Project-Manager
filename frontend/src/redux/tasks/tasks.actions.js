@@ -29,9 +29,13 @@ const addTaskComment = () => ({
     type: tasksTypes.COMMENT_TASK
 })
 
+export const cleanUpTasks = () => ({
+    type: tasksTypes.CLEAN_UP_TASKS
+})
+
 // Befüllt den Payload des action-creators mit tasks ausm Firestore
 export const getTasksInitiate = (projectId) => {
-  return async function(dispatch) {
+  return function(dispatch) {
       const q = query(
           collection(db, "tasks"),
           where("userId", "==", store.getState().user.currentUser.id),
@@ -42,7 +46,7 @@ export const getTasksInitiate = (projectId) => {
           querySnapshot.forEach((doc) => {
               tasks.push({...doc.data(), id: doc.id})
           })
-          dispatch(getTasks(tasks));
+         dispatch(getTasks(tasks));
       })
   }
 }

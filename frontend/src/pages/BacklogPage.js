@@ -12,14 +12,9 @@ import TaskModal from "../components/Modals/TaskModal";
 import styled from "styled-components";
 
 function BacklogPage() {
-  /* Handle opening modal for viewing a tasks
-       ------------------------------------------------
-       - setOpenModal wird als prop zum Modal selbst runtergeschickt 
-       ------------------------------------------------ */
+
   const [openModal, setOpenModal] = useState("");
-
   const { identifier } = useParams();
-
   const { tasks } = useSelector((state) => state.tasks);
   const dispatch = useDispatch();
   useEffect(() => {

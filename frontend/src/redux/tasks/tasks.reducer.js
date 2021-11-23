@@ -33,6 +33,8 @@ const taskReducer = (state = INITIAL_STATE, action) => {
         return {
             ...state
         };
+    case tasksTypes.CLEAN_UP_TASKS:
+        return INITIAL_STATE;
     default:
         return state;
   }

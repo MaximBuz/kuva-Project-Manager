@@ -12,7 +12,7 @@ const teamReducer = (state = INITIAL_STATE, action) => {
             members: action.payload
         };
     default:
-        return state;
+        return {...state};
   }
 }
 

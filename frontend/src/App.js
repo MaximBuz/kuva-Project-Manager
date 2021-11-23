@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import {
   Switch,
   Route,
+  withRouter,
+  useLocation
 } from "react-router-dom";
 
 
@@ -29,14 +31,20 @@ import {
 // Firebase
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import BacklogPage from './pages/BacklogPage';
+import {cleanUpTasks} from "./redux/tasks/tasks.actions";
 
 // App Component
 const App = (props) => {
+
   const dispatch = useDispatch();
   const { currentUser } = useSelector(state => state.user);
+  const location = useLocation();
 
-  // get user on component did mount
+  // clean up tasks in state, so that they don't appear when opening other project
+  if (location.pathname === "/") {dispatch(cleanUpTasks())}
+
   useEffect(() => {
+    // get user on component did mount
     const unlisten = onAuthStateChanged(getAuth(), async (user) => {
       if (user) {
         dispatch(setCurrentUserInitiate({...user}));
@@ -44,10 +52,9 @@ const App = (props) => {
         dispatch(setCurrentUserInitiate(null));
       }
     });
-
     // unsubscribe on unmount
     return () => unlisten()
-  }, []);  
+  }, [dispatch]);  
 
   return (
       <Switch>
@@ -59,8 +66,8 @@ const App = (props) => {
             <div>
               <Route 
                 exact path="/"
-                render={() => (
-                  <MainLayout menuContent={projectsOverviewItems}>
+                render={(props) => (
+                  <MainLayout menuContent={projectsOverviewItems} {...props} key={document.location.href}>
                     <ProjectsPage/>   
                   </MainLayout>       
                 )}
@@ -69,7 +76,7 @@ const App = (props) => {
               <Route
                 exact path="/project/:identifier"
                 render={(props) => (
-                  <MainLayout menuContent={ProjectTaskOverviewItems} {...props}>  
+                  <MainLayout menuContent={ProjectTaskOverviewItems} {...props} key={document.location.href}>  
                     <TasksPage/>
                   </MainLayout>  
                 )}
@@ -78,7 +85,7 @@ const App = (props) => {
               <Route
                 path="/project/:identifier/backlog"
                 render={(props) => (
-                  <MainLayout menuContent={ProjectBacklogItems} {...props}>  
+                  <MainLayout menuContent={ProjectBacklogItems} {...props} key={document.location.href}>  
                     <BacklogPage/>
                   </MainLayout>  
                 )}
@@ -87,7 +94,7 @@ const App = (props) => {
               <Route
                 path="/project/:identifier/team"
                 render={(props) => (
-                  <MainLayout menuContent={ProjectTeamItems} {...props}>  
+                  <MainLayout menuContent={ProjectTeamItems} {...props} key={document.location.href}>  
                     <TeamPage/>
                   </MainLayout>  
                 )}
@@ -109,4 +116,4 @@ const App = (props) => {
   </svg>
 */
 
-export default App;
+export default withRouter(App);

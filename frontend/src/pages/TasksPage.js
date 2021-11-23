@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import {
   getTasksInitiate,
   updateTaskInitiate,
+  cleanUpTasks
 } from "../redux/tasks/tasks.actions";
 import { DragDropContext } from "react-beautiful-dnd";
 import { Droppable } from "react-beautiful-dnd";
@@ -70,58 +71,54 @@ const ColumnTitleRow = styled.div`
 `;
 
 function TasksPage() {
-  /*
-    Handle opening modal for viewing a tasks
-    ------------------------------------------------
-    - setOpenModal wird als prop zum Modal selbst runtergeschickt 
-    ------------------------------------------------
-    */
+
+  // Opening and closing Task Modals
   const [openModal, setOpenModal] = useState("");
 
+  // Get Project ID from URL
   const { identifier } = useParams();
 
+  // Get tasks from Redux State
   const { tasks } = useSelector((state) => state.tasks);
+
+  // Get tasks from firebase
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getTasksInitiate(identifier));
-  }, []);
+  }, [])
 
-  // Population of Selected for development Column
-  const [tasksSelected, setTasksSelected] = useState(
-    tasks.filter(
-      (element) => element.column === "selected-for-development-column"
-    )
-  );
-  const countSelected = tasksSelected.length;
-
-  // Population of In Progress Column
-  const [tasksInProgress, setTasksInProgress] = useState(
-    tasks.filter((element) => element.column === "in-progress-column")
-  );
+  // Initialize states for all columns
+  const [tasksSelected, setTasksSelected] = useState([]);
+  const countSelected = tasksSelected?.length;
+  
+  const [tasksInProgress, setTasksInProgress] = useState([]);
   const countInProgress = tasksInProgress.length;
-  /* useEffect(() => {
-        console.log(tasksInProgress)
-    }, [tasksInProgress]) */
-
-  // Population of In Review Column
-  const [tasksInReview, setTasksInReview] = useState(
-    tasks.filter((element) => element.column === "in-review-column")
-  );
+  
+  const [tasksInReview, setTasksInReview] = useState([]);
   const countInReview = tasksInReview.length;
-
-  // Population of Completed Column
-  const [tasksCompleted, setTasksCompleted] = useState(
-    tasks.filter((element) => element.column === "completed-column")
-  );
+  
+  const [tasksCompleted, setTasksCompleted] = useState([]);
   const countCompleted = tasksCompleted.length;
+  
+  useEffect(() => {
+    // Population of Selected for development Column
+    setTasksSelected(tasks.filter((element) => element.column === "selected-for-development-column"));
+    // Population of In Progress Column
+    setTasksInProgress(tasks.filter((element) => element.column === "in-progress-column"));
+    // Population of In Review Column
+    setTasksInReview(tasks.filter((element) => element.column === "in-review-column"));
+    // Population of Completed Column
+    setTasksCompleted(tasks.filter((element) => element.column === "completed-column"));
+  }, [tasks])
+
 
   // Drag and drop functionality (TODO: Move to seperate file, way to big a function)
   const onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
-
+    
     // check if item has been dropped
     if (!destination) return;
-
+    
     // check if item has changed its position
     if (
       destination.droppableId === source.droppableId &&
