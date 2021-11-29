@@ -1,24 +1,23 @@
-import teamTypes from './team.types';
+import teamTypes from "./team.types";
 
 const INITIAL_STATE = {
-    members: [],
+  members: [],
 };
 
 const teamReducer = (state = INITIAL_STATE, action) => {
-  switch (action.type){
+  switch (action.type) {
     case teamTypes.GET_MEMBERS:
-        return {
-            ...state,
-            members: action.payload
-        };
+      return {
+        ...state,
+        members: action.payload,
+      };
     case teamTypes.ADD_MEMBERS:
-        return {
-            ...state
-        };
+      return {
+        ...state,
+      };
     default:
-        return {...state};
+      return { ...state };
   }
-}
-
+};
 
 export default teamReducer;

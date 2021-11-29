@@ -3,7 +3,7 @@ import UserCard from "../components/Cards/UserCard";
 import CounterBlob from "../components/Misc/CounterBlob";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {getMembersInitiate} from "../redux/team/team.actions";
+import { getMembersInitiate } from "../redux/team/team.actions";
 import { useParams } from "react-router-dom";
 import { UilPlusCircle } from "@iconscout/react-unicons";
 import Modal from "../components/Modals/NewTeamMemberModal";
@@ -47,7 +47,7 @@ const UserList = styled.div`
   flex-wrap: wrap;
   padding: 20px 20px 20px 0px;
   gap: 10px;
-`
+`;
 
 const AddButton = styled.div`
   display: flex;
@@ -78,29 +78,27 @@ const AddButton = styled.div`
       fill: white;
     }
   }
-`
+`;
 
 function TeamPage(props) {
-
   const { identifier } = useParams();
 
-  
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getMembersInitiate(identifier));
   }, []);
 
   const [openModal, setOpenModal] = useState(false);
-  
+
   const { members } = useSelector((state) => state.team);
 
   let memberCount = members.length;
-  
+
   return (
     <div>
       <FilterSection>
         <p>
-          Search For Team Members: {" "}
+          Search For Team Members:{" "}
           <span>
             <SearchField type="text"></SearchField>
           </span>
@@ -114,13 +112,17 @@ function TeamPage(props) {
       </MemberCounter>
       <UserList>
         {members.map((member) => {
-          return <UserCard user={member}></UserCard>
+          return <UserCard user={member}></UserCard>;
         })}
-        <AddButton onClick={() => {setOpenModal(!openModal)}}>
+        <AddButton
+          onClick={() => {
+            setOpenModal(!openModal);
+          }}
+        >
           <UilPlusCircle className="add-icon" size="50" color="#51515170" />
         </AddButton>
-      </UserList>              
-      
+      </UserList>
+
       {openModal && <Modal closeModal={setOpenModal} projectId={identifier} />}
     </div>
   );
