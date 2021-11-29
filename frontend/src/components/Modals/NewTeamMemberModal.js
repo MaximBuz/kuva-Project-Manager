@@ -1,7 +1,10 @@
 import ReactDom from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addProjectInitiate } from "../../redux/projects/projects.actions";
 import { useState } from "react";
+import { addMembersInitiate } from "../../redux/team/team.actions";
+import { collection, query, getDocs, where } from "firebase/firestore";
+import { db } from "../../firebase-config";
+import { useHistory } from "react-router-dom";
 
 import styled from "styled-components";
 
@@ -116,6 +119,40 @@ const Section = styled.div`
   }
 `;
 
+const SearchField = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+
+  button  {
+    border-radius: 15px;
+    font-size: large;
+  }
+`;
+
+const Collaborators = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+`;
+
+const CollaboratorPill = styled.div`
+  background-color: grey;
+  border-radius: 10px;
+  padding: 10px;
+  color: white;
+  font-size: small;
+`;
+
+const ErrorMessage = styled.p`
+  color: red;
+`;
+
 const initialState = {
   /* Fill this in */
 };
@@ -123,20 +160,42 @@ const initialState = {
 function Modal({ closeModal, projectId }) {
   //holding the input values provided by user
   const [state, setState] = useState(initialState);
+  const [collaborators, setCollaborators] = useState([]);
+  const [queryError, setQueryError] = useState("");
+  let history = useHistory();
 
   const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
     let { name, value } = e.target;
-    setState({ ...state, [name]: value});
+    setState({ ...state, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleUserSearch = async (e) => {
     e.preventDefault();
-    dispatch(/* addProjectInitiate(state, currentUser) */);
+    const q = query(
+      collection(db, "users"),
+      where("email", "==", state.userEmail)
+    );
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) {
+      setQueryError("No user with this email adress found!");
+    } else {
+      setQueryError("");
+      querySnapshot.forEach((doc) => {
+        setCollaborators([...collaborators, doc.data()]);
+      });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await dispatch(addMembersInitiate(projectId, collaborators));
     setTimeout(function () {
       closeModal();
+      history.push("backlog");
     }, 500);
+    window.location.reload(true);
   };
 
   return ReactDom.createPortal(
@@ -153,17 +212,30 @@ function Modal({ closeModal, projectId }) {
               <path d="M1 1L16 18M16 1L1 18" stroke="black" />
             </CloseButton>
           </TitleRow>
-          <Form onSubmit={handleSubmit}>
+          <Form>
             <Section>
               <label htmlFor="userEmail">Search by User Email</label>
-              <input
-                type="text"
-                name="userEmail"
-                onChange={handleInputChange}
-              ></input>
+              <SearchField>
+                <input
+                  type="text"
+                  name="userEmail"
+                  onChange={handleInputChange}
+                ></input>
+                <button onClick={handleUserSearch}>Search</button>
+              </SearchField>
+              {queryError && <ErrorMessage>{queryError}</ErrorMessage>}
+              {collaborators && (
+                <Collaborators>
+                  {collaborators.map((collaborator) => {
+                    return (
+                      <CollaboratorPill>{collaborator.email}</CollaboratorPill>
+                    );
+                  })}
+                </Collaborators>
+              )}
             </Section>
-            <button type="submit" value="Submit">
-              Create New Project
+            <button onClick={handleSubmit} type="submit" value="Submit">
+              Add Team Members
             </button>
           </Form>
         </FormWrapper>

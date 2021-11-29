@@ -11,6 +11,10 @@ const teamReducer = (state = INITIAL_STATE, action) => {
             ...state,
             members: action.payload
         };
+    case teamTypes.ADD_MEMBERS:
+        return {
+            ...state
+        };
     default:
         return {...state};
   }
