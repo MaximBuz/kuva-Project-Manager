@@ -2,7 +2,7 @@ import ReactDom from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { addMembersInitiate } from "../../redux/team/team.actions";
-import { collection, query, getDocs, where } from "firebase/firestore";
+import { collection, query, getDocs, where, addDoc } from "firebase/firestore";
 import { db } from "../../firebase-config";
 import { useHistory } from "react-router-dom";
 
@@ -159,7 +159,7 @@ const CollaboratorPill = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background-color: #C6C6C6;
+  background-color: #c6c6c6;
   border-radius: 10px;
   padding: 10px;
   color: white;
@@ -172,11 +172,30 @@ const CollaboratorPill = styled.div`
     font-size: large;
     cursor: pointer;
   }
-
 `;
 
 const ErrorMessage = styled.p`
   color: red;
+  margin-left: 10px;
+`;
+
+const InviteLink = styled.p`
+  color: blue;
+  font-weight: bold;
+  color: #35307e;
+  cursor: pointer;
+  margin-left: 10px;
+`;
+
+const EmailSuccessPopUp = styled.div`
+  color: white;
+  background-color: #6ccd10;
+  border-radius: 10px;
+  padding: 15px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000000000;
 `;
 
 const initialState = {
@@ -188,6 +207,8 @@ function Modal({ closeModal, projectId }) {
   const [state, setState] = useState(initialState);
   const [collaborators, setCollaborators] = useState([]);
   const [queryError, setQueryError] = useState("");
+  const { currentUser } = useSelector((state) => state.user);
+  const [emailSuccess, setEmailSuccess] = useState(false);
   let history = useHistory();
 
   const dispatch = useDispatch();
@@ -201,7 +222,7 @@ function Modal({ closeModal, projectId }) {
     e.preventDefault();
     const q = query(
       collection(db, "users"),
-      where("email", "==", state.userEmail)
+      where("email", "==", state.userEmail || "no@name.com")
     );
     const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) {
@@ -215,9 +236,38 @@ function Modal({ closeModal, projectId }) {
   };
 
   const handleDeleteCollaborator = (emailToDelete) => () => {
-    setCollaborators(collaborators.filter((collaborator) => collaborator.email !== emailToDelete))
-  }
+    setCollaborators(
+      collaborators.filter(
+        (collaborator) => collaborator.email !== emailToDelete
+      )
+    );
+  };
 
+  const handleInvitation = async () => {
+    const mailRef = await addDoc(collection(db, "mail"), {
+      to: [state.userEmail],
+      message: {
+        subject: `${currentUser.displayName} invited you to use kuva!`,
+        text: `
+        Hey there! Your coworker ${currentUser.displayName} just send you an invite to join kuva!
+        Follow this link to sign up: http://localhost:3000/ !
+        `,
+        html: `
+        <h1>Hey there!</h1>
+        <br>
+        <p>Your coworker ${currentUser.displayName} just send you an invite to join <b>kuva</b>!</p>
+        Follow this <a href="http://localhost:3000/">link</a> to sign up!
+        `,
+      },
+    });
+    /* Here create something to notify user of succesfull email */
+    setQueryError("");
+    setState(initialState);
+    setEmailSuccess(true);
+    setTimeout(() => {
+      setEmailSuccess(false);
+    }, 2500);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -231,6 +281,9 @@ function Modal({ closeModal, projectId }) {
 
   return ReactDom.createPortal(
     <>
+      {emailSuccess && (
+        <EmailSuccessPopUp>Your invitation has been sent!</EmailSuccessPopUp>
+      )}
       <GreyBackground onClick={() => closeModal()}>
         <FormWrapper
           onClick={(e) => {
@@ -255,13 +308,23 @@ function Modal({ closeModal, projectId }) {
                 <button onClick={handleUserSearch}>Add</button>
               </SearchField>
               {queryError && <ErrorMessage>{queryError}</ErrorMessage>}
+              {queryError && (
+                <InviteLink onClick={handleInvitation}>
+                  Invite your team member to kuva!
+                </InviteLink>
+              )}
               {collaborators && (
                 <Collaborators>
                   {collaborators.map((collaborator) => {
                     return (
                       <CollaboratorPill>
-                        {collaborator.displayName.split(" ")[0]} ({collaborator.email})
-                        <div onClick={handleDeleteCollaborator(collaborator.email)} >&#10005;</div>
+                        {collaborator.displayName.split(" ")[0]} (
+                        {collaborator.email})
+                        <div
+                          onClick={handleDeleteCollaborator(collaborator.email)}
+                        >
+                          &#10005;
+                        </div>
                       </CollaboratorPill>
                     );
                   })}
