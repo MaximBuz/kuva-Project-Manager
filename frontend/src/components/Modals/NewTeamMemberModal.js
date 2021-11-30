@@ -79,6 +79,15 @@ const Form = styled.form`
     &:hover {
       transform: scale(1.1);
     }
+
+    &:disabled {
+      background-color: grey;
+      cursor: not-allowed;
+
+      &:hover {
+        transform: scale(1);
+      }
+    }
   }
 `;
 
@@ -132,6 +141,10 @@ const SearchField = styled.div`
     border-radius: 15px;
     font-size: large;
   }
+
+  input {
+    flex-grow: 1;
+  }
 `;
 
 const Collaborators = styled.div`
@@ -142,11 +155,24 @@ const Collaborators = styled.div`
 `;
 
 const CollaboratorPill = styled.div`
-  background-color: grey;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #C6C6C6;
   border-radius: 10px;
   padding: 10px;
   color: white;
   font-size: small;
+  gap: 10px;
+
+  div {
+    position: relative;
+    top: 1px;
+    font-size: large;
+    cursor: pointer;
+  }
+
 `;
 
 const ErrorMessage = styled.p`
@@ -188,6 +214,11 @@ function Modal({ closeModal, projectId }) {
     }
   };
 
+  const handleDeleteCollaborator = (emailToDelete) => () => {
+    setCollaborators(collaborators.filter((collaborator) => collaborator.email !== emailToDelete))
+  }
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     await dispatch(addMembersInitiate(projectId, collaborators));
@@ -221,22 +252,32 @@ function Modal({ closeModal, projectId }) {
                   name="userEmail"
                   onChange={handleInputChange}
                 ></input>
-                <button onClick={handleUserSearch}>Search</button>
+                <button onClick={handleUserSearch}>Add</button>
               </SearchField>
               {queryError && <ErrorMessage>{queryError}</ErrorMessage>}
               {collaborators && (
                 <Collaborators>
                   {collaborators.map((collaborator) => {
                     return (
-                      <CollaboratorPill>{collaborator.email}</CollaboratorPill>
+                      <CollaboratorPill>
+                        {collaborator.displayName.split(" ")[0]} ({collaborator.email})
+                        <div onClick={handleDeleteCollaborator(collaborator.email)} >&#10005;</div>
+                      </CollaboratorPill>
                     );
                   })}
                 </Collaborators>
               )}
             </Section>
-            <button onClick={handleSubmit} type="submit" value="Submit">
-              Add Team Members
-            </button>
+            {/* When no email to add, disable button */}
+            {collaborators.length > 0 ? (
+              <button onClick={handleSubmit} type="submit" value="Submit">
+                Add Team Members
+              </button>
+            ) : (
+              <button disabled value="Submit">
+                Add Team Members
+              </button>
+            )}
           </Form>
         </FormWrapper>
       </GreyBackground>{" "}
