@@ -51,7 +51,9 @@ export default function Modal({ closeModal, projectId }) {
     } else {
       setQueryError("");
       querySnapshot.forEach((doc) => {
-        setCollaborators([...collaborators, doc.data()]);
+        const data = doc.data();
+        data["id"] = doc.id;
+        setCollaborators([...collaborators, data]);
       });
     }
   };

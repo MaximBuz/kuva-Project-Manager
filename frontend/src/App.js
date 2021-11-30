@@ -1,23 +1,17 @@
-import './App.css';
+import "./App.css";
 
 // React, Redux, Router
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentUserInitiate, logOutUser } from './redux/user/user.actions';
+import { setCurrentUserInitiate, logOutUser } from "./redux/user/user.actions";
 import { cleanUpTasks } from "./redux/tasks/tasks.actions";
 import { useEffect } from "react";
-import {
-  Switch,
-  Route,
-  withRouter,
-  useLocation
-} from "react-router-dom";
-
+import { Switch, Route, withRouter, useLocation } from "react-router-dom";
 
 // Pages
 import ProjectsPage from "./pages/ProjectsPage";
 import TasksPage from "./pages/TasksPage";
-import LoginPage from './pages/login/index';
-import TeamPage from './pages/TeamPage';
+import LoginPage from "./pages/login/index";
+import TeamPage from "./pages/TeamPage";
 
 // Layouts
 import MainLayout from "./layouts/MainLayout";
@@ -26,90 +20,105 @@ import {
   projectsOverviewItems,
   ProjectTaskOverviewItems,
   ProjectBacklogItems,
-  ProjectTeamItems
+  ProjectTeamItems,
 } from "./components/Menus/LeftMenu/MenuContents";
 
 // Firebase
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import BacklogPage from './pages/BacklogPage';
-
+import BacklogPage from "./pages/BacklogPage";
 
 // App Component
 const App = (props) => {
-
   const dispatch = useDispatch();
-  const { currentUser } = useSelector(state => state.user);
+  const { currentUser } = useSelector((state) => state.user);
   const location = useLocation();
 
   // clean up tasks in state, so that they don't appear when opening other project
-  if (location.pathname === "/") {dispatch(cleanUpTasks())}
+  if (location.pathname === "/") {
+    dispatch(cleanUpTasks());
+  }
 
   useEffect(() => {
     // get user on component did mount
     const unlisten = onAuthStateChanged(getAuth(), async (user) => {
       if (user) {
-        dispatch(setCurrentUserInitiate({...user}));
+        dispatch(setCurrentUserInitiate({ ...user }));
       } else {
         dispatch(logOutUser());
       }
     });
     // unsubscribe on unmount
-    return () => unlisten()
-  }, [dispatch]);  
+    return () => unlisten();
+  }, [dispatch]);
 
   return (
-      <Switch>
-        <div className="App">       
-          {currentUser? 
+    <Switch>
+      <div className="App">
+        {currentUser ? (
           <div>
-        
-
             <div>
-              <Route 
-                exact path="/"
-                render={(props) => (
-                  <MainLayout menuContent={projectsOverviewItems} {...props} key={document.location.href}>
-                    <ProjectsPage/>   
-                  </MainLayout>       
+              <Route
+                exact
+                path="/"
+                render={(props) => (
+                  <MainLayout
+                    menuContent={projectsOverviewItems}
+                    {...props}
+                    key={document.location.href}
+                  >
+                    <ProjectsPage />
+                  </MainLayout>
                 )}
-              />                
+              />
 
               <Route
-                exact path="/project/:identifier"
+                exact
+                path="/project/:identifier"
                 render={(props) => (
-                  <MainLayout menuContent={ProjectTaskOverviewItems} {...props} key={document.location.href}>  
-                    <TasksPage/>
-                  </MainLayout>  
+                  <MainLayout
+                    menuContent={ProjectTaskOverviewItems}
+                    {...props}
+                    key={document.location.href}
+                  >
+                    <TasksPage />
+                  </MainLayout>
                 )}
               />
 
               <Route
                 path="/project/:identifier/backlog"
                 render={(props) => (
-                  <MainLayout menuContent={ProjectBacklogItems} {...props} key={document.location.href}>  
-                    <BacklogPage/>
-                  </MainLayout>  
+                  <MainLayout
+                    menuContent={ProjectBacklogItems}
+                    {...props}
+                    key={document.location.href}
+                  >
+                    <BacklogPage />
+                  </MainLayout>
                 )}
               />
 
               <Route
                 path="/project/:identifier/team"
                 render={(props) => (
-                  <MainLayout menuContent={ProjectTeamItems} {...props} key={document.location.href}>  
-                    <TeamPage/>
-                  </MainLayout>  
+                  <MainLayout
+                    menuContent={ProjectTeamItems}
+                    {...props}
+                    key={document.location.href}
+                  >
+                    <TeamPage />
+                  </MainLayout>
                 )}
               />
-
-          </div> 
+            </div>
           </div>
-          :  <LoginPage/> }
-          
-          </div>
-      </Switch> 
+        ) : (
+          <LoginPage />
+        )}
+      </div>
+    </Switch>
   );
-}
-
+};
 
 /* 
   <svg onClick={handleSignOut} className="logout-icon" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

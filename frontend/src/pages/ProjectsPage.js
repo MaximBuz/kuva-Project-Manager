@@ -1,27 +1,35 @@
+// Components
 import ProjectCard from "../components/Cards/ProjectCard";
 import CounterBlob from "../components/Misc/CounterBlob";
+import Modal from "../components/Modals/NewProjectModal";
+
+// Handling State
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Modal from "../components/Modals/NewProjectModal";
 import { getProjectsInitiate } from "../redux/projects/projects.actions";
-import moment from "moment";
-import { UilPlusCircle } from "@iconscout/react-unicons";
 
+// Styling
+import { UilPlusCircle } from "@iconscout/react-unicons";
 import styled from "styled-components";
 
-function ProjectsPage() {
+// Misc
+import moment from "moment";
 
+function ProjectsPage() {
+  // Handling open and close of new project modal
   const [openModal, setOpenModal] = useState(false);
 
+  // Reading current state from Redux
   const { projects } = useSelector((state) => state.projects);
-
   const { currentUser } = useSelector((state) => state.user);
 
+  // If logged in, get projects from firestore
   const dispatch = useDispatch();
   useEffect(() => {
     if (currentUser) return dispatch(getProjectsInitiate(currentUser));
   }, [currentUser, dispatch]);
 
+  // Count Projects
   let projectCount = projects?.length;
   useEffect(() => {
     projectCount = projects?.length;
@@ -73,7 +81,6 @@ function ProjectsPage() {
 }
 
 export default ProjectsPage;
-
 
 /* Styled Components */
 
