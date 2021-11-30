@@ -8,6 +8,185 @@ import { useHistory } from "react-router-dom";
 
 import styled from "styled-components";
 
+const initialState = {};
+
+export default function Modal({ closeModal, projectId }) {
+  // State holding the user-input values of the form
+  const [state, setState] = useState(initialState);
+
+  // State holding successfully found users by their email
+  const [collaborators, setCollaborators] = useState([]);
+
+  // State holding an error message when no user could be found by the provided email
+  const [queryError, setQueryError] = useState("");
+
+  // The currently logged in user (to send dynamically filled invitiation mails)
+  const { currentUser } = useSelector((state) => state.user);
+
+  // State triggering success notification when invitation has been sent
+  const [emailSuccess, setEmailSuccess] = useState(false);
+
+  // for page refresh
+  let history = useHistory();
+
+  // for redux actions
+  const dispatch = useDispatch();
+
+  // updates the state with form inputs provided by the user
+  const handleInputChange = (e) => {
+    let { name, value } = e.target;
+    setState({ ...state, [name]: value });
+  };
+
+  // searches for users by email adress in firestore
+  const handleUserSearch = async (e) => {
+    e.preventDefault();
+    const q = query(
+      collection(db, "users"),
+      where("email", "==", state.userEmail || "no@name.com")
+    );
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) {
+      setQueryError("No user with this email adress found!");
+    } else {
+      setQueryError("");
+      querySnapshot.forEach((doc) => {
+        setCollaborators([...collaborators, doc.data()]);
+      });
+    }
+  };
+
+  // handles deletion of successfully found users in the pipeline
+  const handleDeleteCollaborator = (emailToDelete) => () => {
+    setCollaborators(
+      collaborators.filter(
+        (collaborator) => collaborator.email !== emailToDelete
+      )
+    );
+  };
+
+  // sends out an invitation email to non-existing user
+  const handleInvitation = async () => {
+    const mailRef = await addDoc(collection(db, "mail"), {
+      to: [state.userEmail],
+      message: {
+        subject: `${currentUser.displayName} invited you to use kuva!`,
+        text: `
+        Hey there! Your coworker ${currentUser.displayName} just send you an invite to join kuva!
+        Follow this link to sign up: http://localhost:3000/ !
+        `,
+        html: `
+        <h1>Hey there!</h1>
+        <br>
+        <p>Your coworker ${currentUser.displayName} just send you an invite to join <b>kuva</b>!</p>
+        Follow this <a href="http://localhost:3000/">link</a> to sign up!
+        `,
+      },
+    });
+
+    // resets the form when invitation has been sent
+    setQueryError("");
+    setState(initialState);
+
+    // triggers success notification on the top right corner of the screen
+    setEmailSuccess(true);
+
+    // removes the notification after 2.5 seconds
+    setTimeout(() => {
+      setEmailSuccess(false);
+    }, 2500);
+  };
+
+  // adds the chosen team members to the project in firestore and reloads the page with new redux state
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await dispatch(addMembersInitiate(projectId, collaborators));
+    setTimeout(function () {
+      closeModal();
+      history.push("backlog");
+    }, 500);
+    window.location.reload(true);
+  };
+
+  return ReactDom.createPortal(
+    <>
+      {/* Notification popup when invitation has been sent */}
+      {emailSuccess && (
+        <EmailSuccessPopUp>Your invitation has been sent!</EmailSuccessPopUp>
+      )}
+      {/* Grey background behind modal, closes modal on click */}
+      <GreyBackground onClick={() => closeModal()}>
+        <FormWrapper
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <TitleRow>
+            <Title>Add New Team Member</Title>
+            <CloseButton onClick={() => closeModal()} viewBox="0 0 17 19">
+              <path d="M1 1L16 18M16 1L1 18" stroke="black" />
+            </CloseButton>
+          </TitleRow>
+          <Form>
+            <Section>
+              <label htmlFor="userEmail">Search by User Email</label>
+              <SearchField>
+                <input
+                  type="text"
+                  name="userEmail"
+                  onChange={handleInputChange}
+                ></input>
+                <button onClick={handleUserSearch}>Add</button>
+              </SearchField>
+              {queryError && <ErrorMessage>{queryError}</ErrorMessage>}
+              {queryError && (
+                <InviteLink onClick={handleInvitation}>
+                  Invite your team member to kuva!
+                </InviteLink>
+              )}
+              {collaborators && (
+                <Collaborators>
+                  {collaborators.map((collaborator) => {
+                    return (
+                      <CollaboratorPill>
+                        {collaborator.displayName.split(" ")[0]} (
+                        {collaborator.email})
+                        <div
+                          onClick={handleDeleteCollaborator(collaborator.email)}
+                        >
+                          &#10005;
+                        </div>
+                      </CollaboratorPill>
+                    );
+                  })}
+                </Collaborators>
+              )}
+            </Section>
+            {/* When no email in pipeline, disable button */}
+            {collaborators.length > 0 ? (
+              <button onClick={handleSubmit} type="submit" value="Submit">
+                Add Team Members
+              </button>
+            ) : (
+              <button disabled value="Submit">
+                Add Team Members
+              </button>
+            )}
+          </Form>
+        </FormWrapper>
+      </GreyBackground>{" "}
+      ,
+    </>,
+    document.getElementById("portal")
+  );
+}
+
+/* 
+-----------------
+Styled Components
+-----------------
+*/
+
 const GreyBackground = styled.div`
   position: fixed;
   width: 100vw;
@@ -197,157 +376,3 @@ const EmailSuccessPopUp = styled.div`
   right: 20px;
   z-index: 1000000000;
 `;
-
-const initialState = {
-  /* Fill this in */
-};
-
-function Modal({ closeModal, projectId }) {
-  //holding the input values provided by user
-  const [state, setState] = useState(initialState);
-  const [collaborators, setCollaborators] = useState([]);
-  const [queryError, setQueryError] = useState("");
-  const { currentUser } = useSelector((state) => state.user);
-  const [emailSuccess, setEmailSuccess] = useState(false);
-  let history = useHistory();
-
-  const dispatch = useDispatch();
-
-  const handleInputChange = (e) => {
-    let { name, value } = e.target;
-    setState({ ...state, [name]: value });
-  };
-
-  const handleUserSearch = async (e) => {
-    e.preventDefault();
-    const q = query(
-      collection(db, "users"),
-      where("email", "==", state.userEmail || "no@name.com")
-    );
-    const querySnapshot = await getDocs(q);
-    if (querySnapshot.empty) {
-      setQueryError("No user with this email adress found!");
-    } else {
-      setQueryError("");
-      querySnapshot.forEach((doc) => {
-        setCollaborators([...collaborators, doc.data()]);
-      });
-    }
-  };
-
-  const handleDeleteCollaborator = (emailToDelete) => () => {
-    setCollaborators(
-      collaborators.filter(
-        (collaborator) => collaborator.email !== emailToDelete
-      )
-    );
-  };
-
-  const handleInvitation = async () => {
-    const mailRef = await addDoc(collection(db, "mail"), {
-      to: [state.userEmail],
-      message: {
-        subject: `${currentUser.displayName} invited you to use kuva!`,
-        text: `
-        Hey there! Your coworker ${currentUser.displayName} just send you an invite to join kuva!
-        Follow this link to sign up: http://localhost:3000/ !
-        `,
-        html: `
-        <h1>Hey there!</h1>
-        <br>
-        <p>Your coworker ${currentUser.displayName} just send you an invite to join <b>kuva</b>!</p>
-        Follow this <a href="http://localhost:3000/">link</a> to sign up!
-        `,
-      },
-    });
-    /* Here create something to notify user of succesfull email */
-    setQueryError("");
-    setState(initialState);
-    setEmailSuccess(true);
-    setTimeout(() => {
-      setEmailSuccess(false);
-    }, 2500);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await dispatch(addMembersInitiate(projectId, collaborators));
-    setTimeout(function () {
-      closeModal();
-      history.push("backlog");
-    }, 500);
-    window.location.reload(true);
-  };
-
-  return ReactDom.createPortal(
-    <>
-      {emailSuccess && (
-        <EmailSuccessPopUp>Your invitation has been sent!</EmailSuccessPopUp>
-      )}
-      <GreyBackground onClick={() => closeModal()}>
-        <FormWrapper
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-        >
-          <TitleRow>
-            <Title>Add New Team Member</Title>
-            <CloseButton onClick={() => closeModal()} viewBox="0 0 17 19">
-              <path d="M1 1L16 18M16 1L1 18" stroke="black" />
-            </CloseButton>
-          </TitleRow>
-          <Form>
-            <Section>
-              <label htmlFor="userEmail">Search by User Email</label>
-              <SearchField>
-                <input
-                  type="text"
-                  name="userEmail"
-                  onChange={handleInputChange}
-                ></input>
-                <button onClick={handleUserSearch}>Add</button>
-              </SearchField>
-              {queryError && <ErrorMessage>{queryError}</ErrorMessage>}
-              {queryError && (
-                <InviteLink onClick={handleInvitation}>
-                  Invite your team member to kuva!
-                </InviteLink>
-              )}
-              {collaborators && (
-                <Collaborators>
-                  {collaborators.map((collaborator) => {
-                    return (
-                      <CollaboratorPill>
-                        {collaborator.displayName.split(" ")[0]} (
-                        {collaborator.email})
-                        <div
-                          onClick={handleDeleteCollaborator(collaborator.email)}
-                        >
-                          &#10005;
-                        </div>
-                      </CollaboratorPill>
-                    );
-                  })}
-                </Collaborators>
-              )}
-            </Section>
-            {/* When no email to add, disable button */}
-            {collaborators.length > 0 ? (
-              <button onClick={handleSubmit} type="submit" value="Submit">
-                Add Team Members
-              </button>
-            ) : (
-              <button disabled value="Submit">
-                Add Team Members
-              </button>
-            )}
-          </Form>
-        </FormWrapper>
-      </GreyBackground>{" "}
-      ,
-    </>,
-    document.getElementById("portal")
-  );
-}
-
-export default Modal;
