@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getMembersInitiate } from "../redux/projects/projects.actions";
 import { useParams } from "react-router-dom";
 import { UilPlusCircle } from "@iconscout/react-unicons";
-import Modal from "../components/Modals/NewTeamMemberModal";
+import NewModal from "../components/Modals/NewTeamMemberModal";
+import UserModal from "../components/Modals/UserModal";
 
 const FilterSection = styled.div`
   display: flex;
@@ -81,7 +82,6 @@ const AddButton = styled.div`
 `;
 
 function TeamPage(props) {
-
   // Get project id from url
   const { identifier } = useParams();
 
@@ -92,8 +92,9 @@ function TeamPage(props) {
   }, []);
   const { members } = useSelector((state) => state.projects);
 
-  // Handling opening and closing of modal for adding new team-members
-  const [openModal, setOpenModal] = useState(false);
+  // Handling opening and closing of modals
+  const [openUserModal, setOpenUserModal] = useState("");
+  const [openNewModal, setOpenNewModal] = useState(false);
 
   // Counting team members
   let memberCount = members?.length;
@@ -116,18 +117,30 @@ function TeamPage(props) {
       </MemberCounter>
       <UserList>
         {members?.map((member) => {
-          return <UserCard user={member}></UserCard>;
+          return (
+            <UserCard
+              onClick={() => {
+                setOpenUserModal(member);
+              }}
+              user={member}
+            ></UserCard>
+          );
         })}
         <AddButton
           onClick={() => {
-            setOpenModal(!openModal);
+            setOpenNewModal(!openNewModal);
           }}
         >
           <UilPlusCircle className="add-icon" size="50" color="#51515170" />
         </AddButton>
       </UserList>
 
-      {openModal && <Modal closeModal={setOpenModal} projectId={identifier} />}
+      {openNewModal && (
+        <NewModal closeModal={setOpenNewModal} projectId={identifier} />
+      )}
+      {openUserModal && (
+        <UserModal closeModal={setOpenUserModal} user={openUserModal} />
+      )}
     </div>
   );
 }

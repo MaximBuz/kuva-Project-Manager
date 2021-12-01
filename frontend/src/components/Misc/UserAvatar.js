@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 const UserCardAvatar = styled.div`
-  width: 50px;
-  height: 50px;
+  width: ${(props) => props.size}px;
+  height: ${(props) => props.size}px;
   border-radius: 10000px;
   background-color: #35307e;
   color: white;
@@ -20,9 +20,9 @@ const UserProfilePicture = styled.img`
   height: 100%;
 `;
 
-function UserAvatar({ inComments, name, url }) {
+function UserAvatar({ inComments, name, url, size }) {
   return (
-    <UserCardAvatar inComments={inComments} url={url}>
+    <UserCardAvatar inComments={inComments} url={url} size={size}>
       {url ? (
         <UserProfilePicture inComments={inComments} src={url} />
       ) : (

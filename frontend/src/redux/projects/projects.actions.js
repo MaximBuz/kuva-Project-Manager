@@ -34,7 +34,7 @@ const addMembers = () => ({
 
 export const getProjectsInitiate = (user) => {
   return async function (dispatch) {
-    const q = query(collection(db, "projects"), where("userId", "==", user.id));
+    const q = query(collection(db, "projects"), where("collaboratorIds", "array-contains", user.id));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const projects = [];
       querySnapshot.forEach((doc) => {
@@ -53,6 +53,7 @@ export const addProjectInitiate = (project, user) => {
       projectTitle: project.projectTitle,
       timeStamp: Timestamp.now(),
       projectSummary: project.projectSummary,
+      collaboratorIds: [user.id],
       collaborators: [
         {
           id: user.id,
@@ -60,6 +61,7 @@ export const addProjectInitiate = (project, user) => {
           email: user.email,
           jobTitle: user.jobTitle,
           photoUrl: user.photoUrl,
+          projectRole: "Project Owner"
         },
       ],
     });
@@ -87,8 +89,12 @@ export const addMembersInitiate = (projectId, members) => {
     const projectRef = doc(db, "projects", projectId);
     const projectSnap = await getDoc(projectRef);
 
+    // get all member ids
+    const memberIds = members.map(member => member.id)
+
     // now update "collaborators" in project document
     await updateDoc(projectRef, {
+      collaboratorIds:[...projectSnap.data().collaboratorIds, ...memberIds],
       collaborators: [...projectSnap.data().collaborators, ...members],
     });
 

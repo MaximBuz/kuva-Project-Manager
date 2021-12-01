@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import UserCardAvatar from "../Misc/UserAvatar";
+import UserAvatar from "../Misc/UserAvatar";
 
 const UserCardWrapper = styled.div`
   height: fit-content;
@@ -39,20 +39,22 @@ const UserCardName = styled.p`
   color: #515151;
 `;
 
-const UserCardJob = styled.p`
+const UserCardRole = styled.p`
   color: #ff0aba;
+
 `;
 
-function UserCard({ user }) {
+function UserCard({ user, onClick}) {
   return (
-    <UserCardWrapper>
-      <UserCardAvatar
-        name={user?.name || null}
+    <UserCardWrapper onClick={onClick}>
+      <UserAvatar
+        name={user.name}
         url={user?.photoUrl || null}
+        size={50}
       />
       <UserCardTextWrapper>
-        <UserCardName>{user?.displayName || null}</UserCardName>
-        <UserCardJob>{user?.jobTitle || null}</UserCardJob>
+        <UserCardName>{user.displayName}</UserCardName>
+        <UserCardRole>{user.projectRole}</UserCardRole>
       </UserCardTextWrapper>
     </UserCardWrapper>
   );
