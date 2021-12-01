@@ -11,7 +11,6 @@ import {
   getDoc,
   updateDoc,
 } from "firebase/firestore";
-import { store } from "../store";
 
 const getProjects = (projects) => ({
   type: projectsTypes.GET_PROJECTS,
@@ -47,7 +46,7 @@ export const getProjectsInitiate = (user) => {
       collection(db, "projects"),
       where("collaboratorIds", "array-contains", user.id)
     );
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    onSnapshot(q, (querySnapshot) => {
       const projects = [];
       querySnapshot.forEach((doc) => {
         projects.push({ ...doc.data(), id: doc.id });
@@ -59,7 +58,7 @@ export const getProjectsInitiate = (user) => {
 
 export const addProjectInitiate = (project, user) => {
   return async function (dispatch) {
-    const projectRef = await addDoc(collection(db, "projects"), {
+    await addDoc(collection(db, "projects"), {
       projectKey: project.projectKey,
       userId: project.userId,
       projectTitle: project.projectTitle,
@@ -121,7 +120,6 @@ export const addMembersInitiate = (projectId, members) => {
 export const deleteMemberInitiate = (projectId, newMembers, newMemberIds) => {
   return async function (dispatch) {
     const projectRef = doc(db, "projects", projectId);
-    const projectSnap = await getDoc(projectRef);
     await updateDoc(projectRef, {
       collaboratorIds: newMemberIds,
       collaborators: newMembers

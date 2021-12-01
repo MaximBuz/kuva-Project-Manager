@@ -147,6 +147,13 @@ function Modal({ closeModal, projectId }) {
 
   let history = useHistory();
   const { currentUser } = useSelector((state) => state.user);
+  const { projects } = useSelector((state) => state.projects);
+
+  // Find collaborators of the project to assign task to them
+  const collaborators = projects.filter(
+    (project) => project.id === projectId
+  )[0].collaborators;
+
   const userID = currentUser.id;
   const userName = currentUser.displayName;
 
@@ -202,6 +209,7 @@ function Modal({ closeModal, projectId }) {
                 type="text"
                 name="taskTitle"
                 onChange={handleInputChange}
+                required
               ></input>
             </Section>
 
@@ -211,6 +219,7 @@ function Modal({ closeModal, projectId }) {
                 type="text"
                 name="taskSummary"
                 onChange={handleInputChange}
+                required
               ></input>
             </Section>
 
@@ -223,23 +232,29 @@ function Modal({ closeModal, projectId }) {
                 style={{
                   backgroundImage: `url("${image}")`,
                 }}
+                required
               >
-                <option value="user1">user1</option>
-                <option value="user2">user2</option>
-                <option value="user3">user3</option>
+                <option disabled selected value="">Choose a user</option>
+                {collaborators.map((collaborator) => (
+                  <option value={collaborator.id} required>
+                    {collaborator.displayName}
+                  </option>
+                ))}
               </select>
             </Section>
 
             {/* ACHTUNG: Fix bug, when not selecting an option */}
             <Section>
-              <label htmlFor="taskPriority">Summary</label>
+              <label htmlFor="taskPriority">Priority</label>
               <select
                 name="taskPriority"
                 onChange={handleInputChange}
                 style={{
                   backgroundImage: `url("${image}")`,
                 }}
+                required
               >
+                <option disabled selected value="">Choose an option</option>
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
                 <option value="high">High</option>
@@ -254,6 +269,7 @@ function Modal({ closeModal, projectId }) {
                 wrap="soft"
                 name="taskDescription"
                 onChange={handleInputChange}
+                required
               ></textarea>
             </Section>
 

@@ -2,7 +2,6 @@ import projectsTypes from './projects.types';
 
 const INITIAL_STATE = {
   projects: [],
-  project: ""
 };
 
 const projectsReducer = (state=INITIAL_STATE, action) => {

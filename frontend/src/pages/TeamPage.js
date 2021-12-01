@@ -89,7 +89,7 @@ function TeamPage(props) {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getMembersInitiate(identifier));
-  }, []);
+  }, [dispatch, identifier]);
   const { members } = useSelector((state) => state.projects);
 
   // Handling opening and closing of modals
@@ -112,7 +112,7 @@ function TeamPage(props) {
                     </div> */}
       </FilterSection>
       <MemberCounter>
-        <h2>Your Team-Members</h2>
+        <h2>Your project-team</h2>
         {memberCount && <CounterBlob count={memberCount} />}
       </MemberCounter>
       <UserList>

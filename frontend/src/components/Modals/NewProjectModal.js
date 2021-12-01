@@ -167,6 +167,7 @@ function Modal({ closeModal }) {
                 type="text"
                 name="projectTitle"
                 onChange={handleInputChange}
+                required
               ></input>
             </Section>
 
@@ -176,6 +177,7 @@ function Modal({ closeModal }) {
                 type="text"
                 name="projectKey"
                 onChange={handleInputChange}
+                required
               ></input>
             </Section>
 
@@ -187,6 +189,7 @@ function Modal({ closeModal }) {
                 wrap="soft"
                 name="projectSummary"
                 onChange={handleInputChange}
+                required
               ></textarea>
             </Section>
 

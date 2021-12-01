@@ -174,7 +174,7 @@ function Modal({ closeModal, task }) {
 
               <SubSection>
                 <h3>Author</h3>
-                <UserCard user={task.displayName || ""}></UserCard>
+                <UserCard user={task.author}></UserCard>
               </SubSection>
             </RightSection>
           </Content>
