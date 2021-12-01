@@ -139,7 +139,7 @@ function TeamPage(props) {
         <NewModal closeModal={setOpenNewModal} projectId={identifier} />
       )}
       {openUserModal && (
-        <UserModal closeModal={setOpenUserModal} user={openUserModal} />
+        <UserModal closeModal={setOpenUserModal} user={openUserModal} projectId={identifier} members={members}/>
       )}
     </div>
   );

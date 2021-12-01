@@ -31,10 +31,22 @@ const addMembers = () => ({
   type: projectsTypes.ADD_MEMBERS,
 });
 
+const deleteMember = () => ({
+  type: projectsTypes.DELETE_MEMBER,
+});
+
+/* 
+-------------------------------------
+Projects actions 
+-------------------------------------
+*/
 
 export const getProjectsInitiate = (user) => {
   return async function (dispatch) {
-    const q = query(collection(db, "projects"), where("collaboratorIds", "array-contains", user.id));
+    const q = query(
+      collection(db, "projects"),
+      where("collaboratorIds", "array-contains", user.id)
+    );
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const projects = [];
       querySnapshot.forEach((doc) => {
@@ -61,7 +73,7 @@ export const addProjectInitiate = (project, user) => {
           email: user.email,
           jobTitle: user.jobTitle,
           photoUrl: user.photoUrl,
-          projectRole: "Project Owner"
+          projectRole: "Project Owner",
         },
       ],
     });
@@ -69,7 +81,11 @@ export const addProjectInitiate = (project, user) => {
   };
 };
 
-/* Team Members / Collaborators actions */
+/* 
+-------------------------------------
+Team Members / Collaborators actions 
+-------------------------------------
+*/
 
 export const getMembersInitiate = (projectId) => {
   return async function (dispatch) {
@@ -90,11 +106,11 @@ export const addMembersInitiate = (projectId, members) => {
     const projectSnap = await getDoc(projectRef);
 
     // get all member ids
-    const memberIds = members.map(member => member.id)
+    const memberIds = members.map((member) => member.id);
 
     // now update "collaborators" in project document
     await updateDoc(projectRef, {
-      collaboratorIds:[...projectSnap.data().collaboratorIds, ...memberIds],
+      collaboratorIds: [...projectSnap.data().collaboratorIds, ...memberIds],
       collaborators: [...projectSnap.data().collaborators, ...members],
     });
 
@@ -102,10 +118,14 @@ export const addMembersInitiate = (projectId, members) => {
   };
 };
 
-/* 
-export const deleteTaskInitiate = (taskId) => {
-    return async function(dispatch) {
-        await deleteDoc(doc(db, "tasks", taskId))
-        dispatch(deleteTask());
-    }
-} */
+export const deleteMemberInitiate = (projectId, newMembers, newMemberIds) => {
+  return async function (dispatch) {
+    const projectRef = doc(db, "projects", projectId);
+    const projectSnap = await getDoc(projectRef);
+    await updateDoc(projectRef, {
+      collaboratorIds: newMemberIds,
+      collaborators: newMembers
+    });
+    dispatch(deleteMember());
+  };
+};

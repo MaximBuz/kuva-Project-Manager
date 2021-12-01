@@ -1,15 +1,20 @@
 import ReactDom from "react-dom";
 import UserAvatar from "../Misc/UserAvatar";
 
+import { useDispatch } from "react-redux";
+import { deleteMemberInitiate } from "../../redux/projects/projects.actions";
+
 import styled from "styled-components";
 
-export default function UserModal({ closeModal, user }) {
-  /* const dispatch = useDispatch();
-  const deleteTask = async () => {
+export default function UserModal({ closeModal, user, projectId, members }) {
+  const dispatch = useDispatch();
+  const deleteMember = async () => {
+    const newMembers = members.filter(member => member.id !== user.id)
+    const newMemberIds = newMembers.map(member => member.id)
     closeModal();
-    await dispatch(deleteTaskInitiate(task.id));
+    await dispatch(deleteMemberInitiate(projectId, newMembers, newMemberIds));
     window.location.reload(true);
-  }; */
+  };
 
   return ReactDom.createPortal(
     <>
@@ -21,7 +26,7 @@ export default function UserModal({ closeModal, user }) {
         >
           <Header>
             <HeaderPills>
-              <DeleteButton /* onClick={deleteTask} */>
+              <DeleteButton onClick={deleteMember}>
                 <p>Remove from Team</p>
               </DeleteButton>
             </HeaderPills>
@@ -36,9 +41,15 @@ export default function UserModal({ closeModal, user }) {
               size={150}
             />
             <UserName>{user.displayName}</UserName>
-            <Attribute>Title: {user.jobTitle}</Attribute>
-            <Attribute>Email: {user.email}</Attribute>
-            <Attribute>Role on Project: {user.projectRole}</Attribute>
+
+            <AttributeName>Title:</AttributeName>
+            <AttributeValue>{user.jobTitle}</AttributeValue>
+
+            <AttributeName>Role On Project:</AttributeName>
+            <AttributeValue>{user.projectRole}</AttributeValue>
+
+            <AttributeName>Email:</AttributeName>
+            <AttributeValue>{user.email}</AttributeValue>
           </Content>
         </ModalWrapper>
       </GreyBackground>
@@ -69,7 +80,7 @@ const ModalWrapper = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #fff;
-  padding: 30px;
+  padding: 30px 30px 60px 30px;
   z-index: 100000;
   border-radius: 25px;
   -webkit-box-shadow: 0px 5px 50px 10px rgba(0, 0, 0, 0.45);
@@ -120,13 +131,21 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
-`
+  gap: 25px;
+`;
 
 const UserName = styled.div`
-  
-`
+  font-weight: bolder;
+  font-size: 2em;
+  margin-bottom: 25px;
+`;
 
-const Attribute = styled.div`
+const AttributeName = styled.div`
+  font-size: small;
+  margin-bottom: -20px;
+  color: #ff0aba;
+`;
 
-`
+const AttributeValue = styled.div`
+  font-size: large;
+`;
