@@ -16,6 +16,15 @@ const projectsReducer = (state=INITIAL_STATE, action) => {
             return {
                 ...state
             };
+        case projectsTypes.GET_MEMBERS:
+            return {
+                ...state,
+                members: action.payload,
+            };
+        case projectsTypes.ADD_MEMBERS:
+            return {
+                ...state
+            };
         default:
             return state;
   }

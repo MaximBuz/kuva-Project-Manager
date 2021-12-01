@@ -119,7 +119,6 @@ const Section = styled.div`
 const initialState = {
   projectKey: "",
   userId: "",
-  collaboratorIds: [],
   projectTitle: "",
   timeStamp: "",
   projectSummary: ``,

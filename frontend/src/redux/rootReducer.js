@@ -9,7 +9,6 @@ const rootReducer = combineReducers({
     user: userReducer,
     projects: projectsReducer,
     tasks: taskReducer,
-    team: teamReducer
 });
 
 export default rootReducer;

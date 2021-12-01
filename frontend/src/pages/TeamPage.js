@@ -3,7 +3,7 @@ import UserCard from "../components/Cards/UserCard";
 import CounterBlob from "../components/Misc/CounterBlob";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getMembersInitiate } from "../redux/team/team.actions";
+import { getMembersInitiate } from "../redux/projects/projects.actions";
 import { useParams } from "react-router-dom";
 import { UilPlusCircle } from "@iconscout/react-unicons";
 import Modal from "../components/Modals/NewTeamMemberModal";
@@ -81,18 +81,22 @@ const AddButton = styled.div`
 `;
 
 function TeamPage(props) {
+
+  // Get project id from url
   const { identifier } = useParams();
 
+  // Get collaborators in that project from firestore
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getMembersInitiate(identifier));
   }, []);
+  const { members } = useSelector((state) => state.projects);
 
+  // Handling opening and closing of modal for adding new team-members
   const [openModal, setOpenModal] = useState(false);
 
-  const { members } = useSelector((state) => state.team);
-
-  let memberCount = members.length;
+  // Counting team members
+  let memberCount = members?.length;
 
   return (
     <div>
@@ -111,7 +115,7 @@ function TeamPage(props) {
         {memberCount && <CounterBlob count={memberCount} />}
       </MemberCounter>
       <UserList>
-        {members.map((member) => {
+        {members?.map((member) => {
           return <UserCard user={member}></UserCard>;
         })}
         <AddButton

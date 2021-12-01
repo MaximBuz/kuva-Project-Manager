@@ -1,7 +1,7 @@
 import ReactDom from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { addMembersInitiate } from "../../redux/team/team.actions";
+import { addMembersInitiate } from "../../redux/projects/projects.actions";
 import { collection, query, getDocs, where, addDoc } from "firebase/firestore";
 import { db } from "../../firebase-config";
 import { useHistory } from "react-router-dom";
