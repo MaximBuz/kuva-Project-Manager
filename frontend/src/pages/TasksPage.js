@@ -323,7 +323,6 @@ function TasksPage() {
                           id={task.id}
                           identifier={task.identifier}
                           authorId={task.userId}
-                          assigned={task.taskAssignedTo}
                           title={task.taskTitle}
                           timestamp={task.timeStamp}
                           summary={task.taskSummary}
@@ -366,7 +365,6 @@ function TasksPage() {
                         id={task.id}
                         identifier={task.identifier}
                         authorId={task.userId}
-                        assigned={task.taskAssignedTo}
                         title={task.taskTitle}
                         timestamp={task.timeStamp}
                         summary={task.taskSummary}
@@ -409,7 +407,6 @@ function TasksPage() {
                         id={task.id}
                         identifier={task.identifier}
                         authorId={task.userId}
-                        assigned={task.taskAssignedTo}
                         title={task.taskTitle}
                         timestamp={task.timeStamp}
                         summary={task.taskSummary}
@@ -452,7 +449,6 @@ function TasksPage() {
                         id={task.id}
                         identifier={task.identifier}
                         authorId={task.userId}
-                        assigned={task.taskAssignedTo}
                         title={task.taskTitle}
                         timestamp={task.timeStamp}
                         summary={task.taskSummary}

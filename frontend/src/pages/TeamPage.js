@@ -90,7 +90,10 @@ function TeamPage(props) {
   useEffect(() => {
     dispatch(getMembersInitiate(identifier));
   }, [dispatch, identifier]);
-  const { members } = useSelector((state) => state.projects);
+  const { projects } = useSelector((state) => state.projects);
+
+  // get members from project
+  const members = projects.filter(project => project.id === identifier)[0].collaborators
 
   // Handling opening and closing of modals
   const [openUserModal, setOpenUserModal] = useState("");

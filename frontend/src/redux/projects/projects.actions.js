@@ -91,10 +91,7 @@ export const getMembersInitiate = (projectId) => {
     // Find the project in firestore
     const projectRef = doc(db, "projects", projectId);
     const projectSnap = await getDoc(projectRef);
-
-    // Load the collaborators in the redux state
-    const teamMembers = projectSnap.data().collaborators;
-    dispatch(getMembers(teamMembers));
+    dispatch(getMembers());
   };
 };
 

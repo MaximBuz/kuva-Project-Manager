@@ -10,7 +10,7 @@ import {
 } from "../../redux/tasks/tasks.actions";
 
 import styled from "styled-components";
-import { UilCommentAltSlash } from '@iconscout/react-unicons'
+import { UilCommentAltSlash } from "@iconscout/react-unicons";
 
 function Modal({ closeModal, task }) {
   const { currentUser } = useSelector((state) => state.user);
@@ -24,10 +24,10 @@ function Modal({ closeModal, task }) {
   };
 
   /* 
-    ----------------------------
-    Handling the comment section 
-    ----------------------------
-    */
+  ----------------------------
+  Handling the comment section 
+  ----------------------------
+  */
 
   // getting previous comments
   const { taskComments } = useSelector((state) => state.tasks);
@@ -41,7 +41,6 @@ function Modal({ closeModal, task }) {
   const handleInputChange = (e) => {
     setComment(e.target.value);
   };
-
 
   const handleChatSubmit = async (e) => {
     console.log("enter funzt");
@@ -74,7 +73,12 @@ function Modal({ closeModal, task }) {
 
           <TitleRow>
             <Title>{task.taskTitle}</Title>
-            <p>Created REPLACE hours ago</p>
+            <p>
+              Created{" "}
+              {moment(new Date(task.timeStamp.seconds * 1000))
+                .fromNow()
+                .toString()}
+            </p>
           </TitleRow>
           <Content>
             <LeftSection>
@@ -92,7 +96,7 @@ function Modal({ closeModal, task }) {
                 <h3>Activity</h3>
                 <div>
                   <CommentHistory>
-                    {taskComments.length > 0 ?
+                    {taskComments.length > 0 ? (
                       taskComments
                         .sort((a, b) => {
                           if (a.timeStamp < b.timeStamp) {
@@ -136,13 +140,14 @@ function Modal({ closeModal, task }) {
                               </ForeignComment>
                             );
                           }
-                        }) :
-                        <NoCommentText>
-                          <UilCommentAltSlash size="50"/>
-                          <p> No comments yet.</p>
-                          <p>Be the first one to post something!</p>
-                        </NoCommentText>
-                        }
+                        })
+                    ) : (
+                      <NoCommentText>
+                        <UilCommentAltSlash size="50" />
+                        <p> No comments yet.</p>
+                        <p>Be the first one to post something!</p>
+                      </NoCommentText>
+                    )}
                   </CommentHistory>
                   <div>
                     <form onSubmit={handleChatSubmit}>
@@ -175,8 +180,10 @@ function Modal({ closeModal, task }) {
 
               <SubSection>
                 <h3>Assigned To</h3>
-                <UserCard user={task.displayName || ""}></UserCard>
-                <UserCard user={task.displayName || ""}></UserCard>
+                {task.taskAssignedToUsers &&
+                  task.taskAssignedToUsers.map((user) => {
+                    return <UserCard user={user}></UserCard>;
+                  })}
               </SubSection>
 
               <SubSection>
@@ -378,7 +385,7 @@ const NoCommentText = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`
+`;
 
 const ForeignComment = styled.div`
   display: flex;

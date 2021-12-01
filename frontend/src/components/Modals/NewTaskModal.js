@@ -153,6 +153,7 @@ function Modal({ closeModal, projectId }) {
   const collaborators = projects.filter(
     (project) => project.id === projectId
   )[0].collaborators;
+  console.log(collaborators)
 
   const userID = currentUser.id;
   const userName = currentUser.displayName;

@@ -18,11 +18,10 @@ const projectsReducer = (state=INITIAL_STATE, action) => {
         case projectsTypes.GET_MEMBERS:
             return {
                 ...state,
-                members: action.payload,
             };
         case projectsTypes.ADD_MEMBERS:
             return {
-                ...state
+                ...state,
             };
         default:
             return state;

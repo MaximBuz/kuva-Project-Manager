@@ -75,7 +75,13 @@ export const addTaskInitiate = (task) => {
       .collaborators
       .filter((collaborator) => collaborator.id === authorId)[0];
 
-    console.log(author)
+    // Now get the users that were assigned to this task
+    // this has to be changed later to have multiple assigned users
+    // for now, only one user can be assigned
+    const assignedTo = projectSnap
+      .data()
+      .collaborators
+      .filter((collaborator) => collaborator.id === task.taskAssignedTo);
 
     await addDoc(collection(db, "tasks"), {
       identifier: task.identifier,
@@ -89,7 +95,8 @@ export const addTaskInitiate = (task) => {
         id: author.id
       },
       userId: task.userId,
-      taskAssignedTo: task.taskAssignedTo,
+      taskAssignedToIds: [task.taskAssignedTo],
+      taskAssignedToUsers: [...assignedTo],
       taskTitle: task.taskTitle,
       timeStamp: Timestamp.now(),
       taskSummary: task.taskSummary,
