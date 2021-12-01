@@ -14,7 +14,6 @@ import { UilCommentAltSlash } from '@iconscout/react-unicons'
 
 function Modal({ closeModal, task }) {
   const { currentUser } = useSelector((state) => state.user);
-
   let priority = task.taskPriority || "";
 
   const dispatch = useDispatch();
