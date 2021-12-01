@@ -30,9 +30,10 @@ function ProjectsPage() {
   }, [currentUser, dispatch]);
 
   // Count Projects
-  let projectCount = projects?.length;
+  let projectCount = projects.length;
   useEffect(() => {
-    projectCount = projects?.length;
+    console.log(projects.length);
+    projectCount = projects.length;
   }, [projects]);
 
   return (
@@ -48,7 +49,7 @@ function ProjectsPage() {
       </WelcomeWrapper>
       <ProjectCounter>
         <h2>your projects</h2>
-        {projectCount && <CounterBlob count={projectCount} />}
+        <CounterBlob count={projectCount || 0} />
       </ProjectCounter>
       <ProjectsWrapper>
         {projects &&

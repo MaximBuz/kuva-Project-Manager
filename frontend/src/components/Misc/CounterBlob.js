@@ -15,7 +15,7 @@ const CounterBlobWrapper = styled.div`
 `;
 
 function CounterBlob(props) {
-  const count = props.count;
+  const count = props.count || 0;
 
   return (
     <CounterBlobWrapper>

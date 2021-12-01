@@ -10,6 +10,7 @@ import {
 } from "../../redux/tasks/tasks.actions";
 
 import styled from "styled-components";
+import { UilCommentAltSlash } from '@iconscout/react-unicons'
 
 function Modal({ closeModal, task }) {
   const { currentUser } = useSelector((state) => state.user);
@@ -41,6 +42,7 @@ function Modal({ closeModal, task }) {
   const handleInputChange = (e) => {
     setComment(e.target.value);
   };
+
 
   const handleChatSubmit = async (e) => {
     console.log("enter funzt");
@@ -91,7 +93,7 @@ function Modal({ closeModal, task }) {
                 <h3>Activity</h3>
                 <div>
                   <CommentHistory>
-                    {taskComments &&
+                    {taskComments.length > 0 ?
                       taskComments
                         .sort((a, b) => {
                           if (a.timeStamp < b.timeStamp) {
@@ -135,7 +137,13 @@ function Modal({ closeModal, task }) {
                               </ForeignComment>
                             );
                           }
-                        })}
+                        }) :
+                        <NoCommentText>
+                          <UilCommentAltSlash size="50"/>
+                          <p> No comments yet.</p>
+                          <p>Be the first one to post something!</p>
+                        </NoCommentText>
+                        }
                   </CommentHistory>
                   <div>
                     <form onSubmit={handleChatSubmit}>
@@ -359,6 +367,19 @@ const CommentHistory = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+// No comments yet, show a message
+const NoCommentText = styled.div`
+  color: #9593c4;
+  font-size: large;
+
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`
 
 const ForeignComment = styled.div`
   display: flex;

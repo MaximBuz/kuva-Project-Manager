@@ -97,7 +97,7 @@ function TeamPage(props) {
   const [openNewModal, setOpenNewModal] = useState(false);
 
   // Counting team members
-  let memberCount = members?.length;
+  let memberCount = members?.length || 0;
 
   return (
     <div>
@@ -113,7 +113,7 @@ function TeamPage(props) {
       </FilterSection>
       <MemberCounter>
         <h2>Your project-team</h2>
-        {memberCount && <CounterBlob count={memberCount} />}
+        <CounterBlob count={memberCount || 0} />
       </MemberCounter>
       <UserList>
         {members?.map((member) => {
