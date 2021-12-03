@@ -170,7 +170,7 @@ export default function Modal({ closeModal, projectId }) {
                 Add Team Members
               </button>
             ) : (
-              <button disabled value="Submit">
+              <button disabled={true} value="Submit">
                 Add Team Members
               </button>
             )}

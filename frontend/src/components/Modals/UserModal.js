@@ -4,7 +4,10 @@ import { useState } from "react";
 import UserAvatar from "../Misc/UserAvatar";
 
 import { useDispatch } from "react-redux";
-import { deleteMemberInitiate, editMemberInitiate } from "../../redux/projects/projects.actions";
+import {
+  deleteMemberInitiate,
+  editMemberInitiate,
+} from "../../redux/projects/projects.actions";
 
 import styled from "styled-components";
 
@@ -26,20 +29,23 @@ export default function UserModal({ closeModal, user, projectId, members }) {
   };
 
   // Handle edits on Project Role Field
-  const [projectRoleInput, setProjectRoleInput] = useState(user.projectRole || "No role added yet");
+  const [projectRoleInput, setProjectRoleInput] = useState(
+    user.projectRole || "No role added yet"
+  );
   const onProjectRoleChange = (e) => {
-    setProjectRoleInput(e.target.value)
-  }
+    setProjectRoleInput(e.target.value);
+  };
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const newMembers = members.map((member) => {
       if (member.id === user.id) {
         member["projectRole"] = projectRoleInput;
       }
-      return member
-    })
+      return member;
+    });
     dispatch(editMemberInitiate(projectId, newMembers));
-  }
+    setProjectRoleEditMode(false);
+  };
 
   return ReactDom.createPortal(
     <>
@@ -47,15 +53,25 @@ export default function UserModal({ closeModal, user, projectId, members }) {
         <ModalWrapper
           onClick={(e) => {
             /* Closing editable fields on click outside of them */
-            projectRoleEditMode && e.target.localName !== "input" && setProjectRoleEditMode(false);
+            projectRoleEditMode &&
+              e.target.localName !== "input" &&
+              setProjectRoleEditMode(false);
             e.stopPropagation();
           }}
         >
           <Header>
             <HeaderPills>
-              <DeleteButton onClick={deleteMember}>
-                <p>Remove from Team</p>
-              </DeleteButton>
+              {!user.projectRole.toLowerCase().includes("owner") ? (
+                <DeleteButton onClick={deleteMember}>
+                  <p>Remove from Team</p>
+                </DeleteButton>
+              ) : (
+                <DeleteButton disabled>
+                  <p>Remove from Team</p>
+                  <span className="tooltiptext">Cannot delete owners</span>
+                </DeleteButton>
+              )
+              }
             </HeaderPills>
             <CloseButton onClick={() => closeModal()} viewBox="0 0 17 19">
               <path d="M1 1L16 18M16 1L1 18" stroke="black" />
@@ -74,12 +90,20 @@ export default function UserModal({ closeModal, user, projectId, members }) {
 
             <AttributeName>Role On Project:</AttributeName>
             {projectRoleEditMode ? (
-              <form onSubmit={handleSubmit} style={{textAlign: "center"}}>
+              <form onSubmit={handleSubmit} style={{ textAlign: "center" }}>
                 <AttributeValueEdit
                   defaultValue={projectRoleInput}
                   onChange={onProjectRoleChange}
                 ></AttributeValueEdit>
-                <input type="submit" style={{visibility: "hidden", display: "none", width: "0", height: "0"}} />
+                <input
+                  type="submit"
+                  style={{
+                    visibility: "hidden",
+                    display: "none",
+                    width: "0",
+                    height: "0",
+                  }}
+                />
               </form>
             ) : (
               <AttributeValue editable={true} onClick={editModeOnClick}>
@@ -144,7 +168,7 @@ const HeaderPills = styled.div`
 `;
 
 const DeleteButton = styled.div`
-  background-color: #e96262;
+  background-color: ${({disabled}) => disabled ? "lightgrey" : "#e96262"};
   color: white;
   border-radius: 6px;
   padding: 5px 10px 5px 10px;
@@ -154,7 +178,48 @@ const DeleteButton = styled.div`
   font-size: medium;
   font-weight: 400;
   transition: 0.15s;
-  cursor: pointer;
+  cursor: ${({disabled}) => disabled ? "not-allowed" : "pointer"};
+  position: relative;
+
+  .tooltiptext {
+    visibility: hidden;
+    position: absolute;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity .6s;
+    width: 120px;
+    top: 140%;
+    left: 50%;
+    margin-left: -60px;
+
+    ::after {
+      content: " ";
+      position: absolute;
+      bottom: 100%;  /* At the top of the tooltip */
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: transparent transparent #555 transparent;
+    }
+
+  }
+
+  ${({disabled}) => disabled && `
+    :hover {
+      .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+  `
+  };
 `;
 
 const CloseButton = styled.svg.attrs({
