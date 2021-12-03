@@ -23,6 +23,10 @@ const projectsReducer = (state=INITIAL_STATE, action) => {
             return {
                 ...state,
             };
+        case projectsTypes.EDIT_MEMBER:
+            return {
+                ...state,
+            };
         default:
             return state;
   }

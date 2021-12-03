@@ -34,6 +34,10 @@ const deleteMember = () => ({
   type: projectsTypes.DELETE_MEMBER,
 });
 
+const editMember = () => ({
+  type: projectsTypes.EDIT_MEMBER,
+})
+
 /* 
 -------------------------------------
 Projects actions 
@@ -113,6 +117,20 @@ export const addMembersInitiate = (projectId, members) => {
     dispatch(addMembers());
   };
 };
+
+export const editMemberInitiate = (projectId, updatedMembers) => {
+  return async function (dispatch) {
+    // find the project in firestore
+    const projectRef = doc(db, "projects", projectId);
+    const projectSnap = await getDoc(projectRef);
+
+    // update the collaborators map field
+    await updateDoc(projectRef, {
+      collaborators: updatedMembers
+    })
+    dispatch(editMember())
+  }
+}
 
 export const deleteMemberInitiate = (projectId, newMembers, newMemberIds) => {
   return async function (dispatch) {
