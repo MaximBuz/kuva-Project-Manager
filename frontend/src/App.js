@@ -1,4 +1,5 @@
 import "./App.css";
+import 'antd/dist/antd.css';
 
 // React, Redux, Router
 import { useDispatch, useSelector } from "react-redux";

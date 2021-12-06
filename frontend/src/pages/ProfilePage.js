@@ -3,6 +3,7 @@ import React from "react";
 
 // Components
 import UserAvatar from "../components/Misc/UserAvatar";
+import { DatePicker, Space } from "antd";
 
 // Styling
 import styled from "styled-components";
@@ -12,13 +13,16 @@ import { UilPhone } from "@iconscout/react-unicons";
 import { UilMapMarker } from "@iconscout/react-unicons";
 import { UilGift } from "@iconscout/react-unicons";
 import { UilSchedule } from "@iconscout/react-unicons";
-import { UilPen } from '@iconscout/react-unicons'
+import { UilPen } from "@iconscout/react-unicons";
 
 // State Management
 import { useDispatch, useSelector } from "react-redux";
 
 export default function ProfilePage() {
   const { currentUser } = useSelector((state) => state.user);
+  function onChange(date, dateString) {
+    console.log(date, dateString);
+  }
   return (
     <>
       <Wrapper>
@@ -40,32 +44,33 @@ export default function ProfilePage() {
             <Item>
               <UilBag size={25} color="#515151" />
               Title: {currentUser.jobTitle || "Add a title"}
-              <UilPen className="edit-pen"/>
+              <UilPen className="edit-pen" />
             </Item>
             <Item>
               <UilEnvelopeAlt size={25} color="#515151" />
               Email: {currentUser.email || "Add an email"}
-              <UilPen className="edit-pen"/>
+              <UilPen className="edit-pen" />
             </Item>
             <Item>
               <UilPhone size={25} color="#515151" />
               Phone: {currentUser.phone || "Add a phone number"}
-              <UilPen className="edit-pen"/>
+              <UilPen className="edit-pen" />
             </Item>
             <Item>
               <UilMapMarker size={25} color="#515151" />
               Location: {currentUser.location || "Add a location"}
-              <UilPen className="edit-pen"/>
+              <UilPen className="edit-pen" />
             </Item>
             <Item>
               <UilGift size={25} color="#515151" />
               Birthday: {currentUser.birthDay || "Add a birthday"}
-              <UilPen className="edit-pen"/>
+              <UilPen className="edit-pen" />
             </Item>
             <Item>
               <UilSchedule size={25} color="#515151" />
-              Work Anniversaty: {currentUser.workAnniversary || "Add a work anniversary"}
-              <UilPen className="edit-pen"/>
+              Work Anniversaty:{" "}
+              {currentUser.workAnniversary || "Add a work anniversary"}
+              <UilPen className="edit-pen" />
             </Item>
           </PersonalItems>
         </PersonalInfoSection>
@@ -166,7 +171,6 @@ const Item = styled.div`
     }
   }
 `;
-
 
 const PreferencesSection = styled.div`
   display: flex;
