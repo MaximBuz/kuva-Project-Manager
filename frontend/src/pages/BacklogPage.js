@@ -1,18 +1,20 @@
-import React from 'react'
+import React from "react";
 import TaskRow from "../components/Cards/TaskRow";
 import CounterBlob from "../components/Misc/CounterBlob";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import { getTasksInitiate, updateTaskInitiate } from '../redux/tasks/tasks.actions';
-import {DragDropContext} from "react-beautiful-dnd";
-import {Droppable} from "react-beautiful-dnd";
+import {
+  getTasksInitiate,
+  updateTaskInitiate,
+} from "../redux/tasks/tasks.actions";
+import { DragDropContext } from "react-beautiful-dnd";
+import { Droppable } from "react-beautiful-dnd";
 import TaskModal from "../components/Modals/TaskModal";
 
 import styled from "styled-components";
 
 function BacklogPage() {
-
   const [openModal, setOpenModal] = useState("");
   const { identifier } = useParams();
   const { tasks } = useSelector((state) => state.tasks);
@@ -247,8 +249,7 @@ function BacklogPage() {
   );
 }
 
-export default BacklogPage
-
+export default BacklogPage;
 
 /* Styled Components */
 
@@ -256,10 +257,10 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 30px;
-` 
+`;
 
 const Section = styled.div`
-  display:flex;
+  display: flex;
   flex-direction: column;
   padding: 20px 10px 30px 10px;
   background-color: white;
@@ -271,7 +272,7 @@ const Section = styled.div`
   flex-direction: column;
   gap: 10px;
   width: 50%;
-`
+`;
 
 const TitleRow = styled.div`
   display: flex;
@@ -283,13 +284,13 @@ const TitleRow = styled.div`
   h2 {
     font-size: 20px;
     font-weight: 500;
-    color: #35307E;
+    color: #35307e;
     transition: 0.15s;
   }
-`
+`;
 
 const TaskList = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-`
+`;

@@ -20,9 +20,21 @@ export const projectsOverviewItems = [{
     active: true
 },{
     icon: accountIcon,
-    text: "Account Settings",
-    link: "account",
+    text: "Profile Settings",
+    link: "profile",
     active: false
+}];
+
+export const profilePageItems = [{
+    icon: projectsIcon,
+    text: "Projects",
+    link: "/",
+    active: false
+},{
+    icon: accountIcon,
+    text: "Profile Settings",
+    link: "profile",
+    active: true
 }];
 
 

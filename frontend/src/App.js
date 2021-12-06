@@ -9,6 +9,7 @@ import { Switch, Route, withRouter, useLocation } from "react-router-dom";
 
 // Pages
 import ProjectsPage from "./pages/ProjectsPage";
+import ProfilePage from "./pages/ProfilePage";
 import TasksPage from "./pages/TasksPage";
 import LoginPage from "./pages/login/index";
 import TeamPage from "./pages/TeamPage";
@@ -21,6 +22,7 @@ import {
   ProjectTaskOverviewItems,
   ProjectBacklogItems,
   ProjectTeamItems,
+  profilePageItems
 } from "./components/Menus/LeftMenu/MenuContents";
 
 // Firebase
@@ -67,6 +69,20 @@ const App = (props) => {
                     key={document.location.href}
                   >
                     <ProjectsPage />
+                  </MainLayout>
+                )}
+              />
+
+              <Route
+                exact
+                path="/profile"
+                render={(props) => (
+                  <MainLayout
+                    menuContent={profilePageItems}
+                    {...props}
+                    key={document.location.href}
+                  >
+                    <ProfilePage />
                   </MainLayout>
                 )}
               />
