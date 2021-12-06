@@ -132,6 +132,7 @@ const PersonalItems = styled.div`
   flex-wrap: wrap;
   gap: 10px;
   max-height: 200px;
+  max-width: fit-content;
 `;
 
 const Item = styled.div`
