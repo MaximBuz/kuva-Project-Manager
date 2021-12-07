@@ -136,8 +136,8 @@ const GreyBackground = styled.div`
 `;
 
 const ModalWrapper = styled.div`
-  width: 70%;
-  max-width: 700px;
+  width: 30%;
+  max-width: 500px;
   position: fixed;
   top: 50%;
   left: 50%;
