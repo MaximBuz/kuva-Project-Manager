@@ -146,7 +146,6 @@ const ModalWrapper = styled.div`
   padding: 30px 30px 60px 30px;
   z-index: 100000;
   border-radius: 25px;
-  -webkit-box-shadow: 0px 5px 50px 10px rgba(0, 0, 0, 0.45);
   box-shadow: 0px 5px 50px 10px rgba(0, 0, 0, 0.45);
 
   display: flex;

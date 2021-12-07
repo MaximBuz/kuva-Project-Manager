@@ -1,8 +1,6 @@
-// React
-import React from "react";
-
 // Components
 import UserAvatar from "../components/Misc/UserAvatar";
+import { Modal, Button } from "antd";
 import { DatePicker, Space } from "antd";
 
 // Styling
@@ -17,12 +15,45 @@ import { UilPen } from "@iconscout/react-unicons";
 
 // State Management
 import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+
+// Firebase tools
+import { db } from "../firebase-config";
+import {
+  collection,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 
 export default function ProfilePage() {
+  // Get currently logged in user
   const { currentUser } = useSelector((state) => state.user);
-  function onChange(date, dateString) {
-    console.log(date, dateString);
+
+  // Handle Modals state
+  const [isTitleModalVisible, setIsTitleModalVisible] = useState(false);
+  const [isEmailModalVisible, setIsEmailModalVisible] = useState(false);
+  const [isPhoneModalVisible, setIsPhoneModalVisible] = useState(false);
+  const [isLocationModalVisible, setIsLocationModalVisible] = useState(false);
+  const [isBirthdayModalVisible, setIsBirthdayModalVisible] = useState(false);
+  const [isAnniversaryModalVisible, setIsAnniversaryModalVisible] =
+    useState(false);
+
+  // Handle Input Changes
+  const [inputs, setInputs] = useState({});
+  const handleInputChange = (e) => {
+    let { name, value } = e.target;
+    setInputs({ [name]: value });
+  };
+
+  // Handle Submits
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const userRef = doc(db, "users", currentUser.id)
+    await updateDoc(userRef, inputs);
+    setInputs({});
+    window.location.reload(true);
   }
+
   return (
     <>
       <Wrapper>
@@ -41,32 +72,32 @@ export default function ProfilePage() {
         <PersonalInfoSection>
           <h3>Personal Information</h3>
           <PersonalItems>
-            <Item>
+            <Item onClick={() => setIsTitleModalVisible(true)}>
               <UilBag size={25} color="#515151" />
               Title: {currentUser.jobTitle || "Add a title"}
               <UilPen className="edit-pen" />
             </Item>
-            <Item>
+            <Item onClick={() => setIsEmailModalVisible(true)}>
               <UilEnvelopeAlt size={25} color="#515151" />
               Email: {currentUser.email || "Add an email"}
               <UilPen className="edit-pen" />
             </Item>
-            <Item>
+            <Item onClick={() => setIsPhoneModalVisible(true)}>
               <UilPhone size={25} color="#515151" />
               Phone: {currentUser.phone || "Add a phone number"}
               <UilPen className="edit-pen" />
             </Item>
-            <Item>
+            <Item onClick={() => setIsLocationModalVisible(true)}>
               <UilMapMarker size={25} color="#515151" />
               Location: {currentUser.location || "Add a location"}
               <UilPen className="edit-pen" />
             </Item>
-            <Item>
+            <Item onClick={() => setIsBirthdayModalVisible(true)}>
               <UilGift size={25} color="#515151" />
               Birthday: {currentUser.birthDay || "Add a birthday"}
               <UilPen className="edit-pen" />
             </Item>
-            <Item>
+            <Item onClick={() => setIsAnniversaryModalVisible(true)}>
               <UilSchedule size={25} color="#515151" />
               Work Anniversaty:{" "}
               {currentUser.workAnniversary || "Add a work anniversary"}
@@ -77,6 +108,37 @@ export default function ProfilePage() {
         <PreferencesSection>
           <h3>Edit Preferences</h3>
         </PreferencesSection>
+
+        {/* Here add all modals */}
+
+        {isTitleModalVisible && (
+          <GreyBackground onClick={() => setIsTitleModalVisible(false)}>
+            <ModalWrapper onClick={(e) => e.stopPropagation()}>
+              <Header>
+                <Title>Change Your Title</Title>
+                <CloseButton
+                  onClick={() => setIsTitleModalVisible(false)}
+                  viewBox="0 0 17 19"
+                >
+                  <path d="M1 1L16 18M16 1L1 18" stroke="black" />
+                </CloseButton>
+              </Header>
+              <Form onSubmit={handleSubmit}>
+                <Section>
+                  <input
+                    type="text"
+                    name="jobTitle"
+                    onChange={handleInputChange}
+                    required
+                  ></input>
+                </Section>
+                <button type="submit" value="Submit">
+                  Submit
+                </button>
+              </Form>
+            </ModalWrapper>
+          </GreyBackground>
+        )}
       </Wrapper>
     </>
   );
@@ -182,5 +244,104 @@ const PreferencesSection = styled.div`
     color: #35307e;
     font-size: larger;
     font-weight: 500;
+  }
+`;
+
+/* Here lets create the modals */
+
+const GreyBackground = styled.div`
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 100000;
+`;
+
+const ModalWrapper = styled.div`
+  width: 30%;
+  max-width: 500px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 30px;
+  z-index: 100000;
+  border-radius: 25px;
+  box-shadow: 0px 5px 50px 10px rgba(0, 0, 0, 0.45);
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+const Header = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const Title = styled.h1`
+  font-size: xx-large;
+  font-weight: bold;
+  color: #35307e;
+`;
+
+const CloseButton = styled.svg.attrs({
+  width: "24",
+  height: "24",
+  fill: "none",
+  xmlns: "http://www.w3.org/2000/svg",
+})`
+  cursor: pointer;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  button {
+    border-radius: 10px;
+    width: fit-content;
+    border-style: none;
+    padding: 10px 15px 10px 15px;
+    font-size: medium;
+    color: white;
+    background-color: #35307e;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+`;
+
+const Section = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  label {
+    font-weight: bolder;
+    margin-left: 10px;
+  }
+
+  input {
+    border-radius: 15px;
+    width: 100%;
+    box-sizing: border-box;
+    border-style: solid;
+    border-color: rgb(221, 221, 221);
+    border-width: thin;
+    padding: 10px 15px 10px 15px;
+    font-size: large;
+    color: grey;
   }
 `;

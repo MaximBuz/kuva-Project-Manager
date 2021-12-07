@@ -36,7 +36,11 @@ export const signInWithGoogle = () => async (dispatch) => {
               displayName: user.displayName,
               email: user.email,
               photoUrl: user.photoURL,
-              jobTitle: "No-Job-Title"
+              jobTitle: "",
+              phone: "",
+              location: "",
+              birthday: "",
+              workAnniversary: ""
             });
           }
         dispatch({
