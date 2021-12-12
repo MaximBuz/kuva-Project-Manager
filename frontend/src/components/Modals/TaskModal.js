@@ -368,6 +368,7 @@ const StatusPill = styled.div`
 const CommentHistory = styled.div`
   width: 100%;
   height: 260px;
+  margin-top: 6px;
   overflow-y: scroll;
   scroll-snap-type: y;
   display: flex;
@@ -458,4 +459,10 @@ const Input = styled.input`
   padding: 10px 15px 10px 15px;
   font-size: small;
   color: grey;
+  transition: 0.3s;
+
+    &:focus {
+      box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.10);
+      border-color: #35307e;
+    }
 `;

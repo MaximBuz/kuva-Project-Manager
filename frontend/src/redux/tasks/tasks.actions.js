@@ -50,7 +50,6 @@ export const getTasksInitiate = (projectId) => {
   return function (dispatch) {
     const q = query(
       collection(db, "tasks"),
-      where("userId", "==", store.getState().user.currentUser.id),
       where("projectId", "==", projectId)
     );
     const unsubscribe = onSnapshot(q, (querySnapshot) => {

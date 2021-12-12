@@ -76,6 +76,10 @@ const Form = styled.form`
     &:hover {
       transform: scale(1.1);
     }
+    &:focus {
+      box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.10);
+      transform: scale(1.1);
+    }
   }
 `;
 
@@ -98,6 +102,12 @@ const Section = styled.div`
     padding: 10px 15px 10px 15px;
     font-size: large;
     color: grey;
+    transition: 0.3s;
+
+    &:focus {
+      box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.10);
+      border-color: #35307e;
+    }
   }
 
   textarea {
@@ -113,6 +123,12 @@ const Section = styled.div`
     overflow: hidden;
     resize: none;
     word-wrap: break-all;
+    transition: 0.3s;
+
+    &:focus {
+      box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.10);
+      border-color: #35307e;
+    }
   }
 `;
 

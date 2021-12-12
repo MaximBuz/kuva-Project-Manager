@@ -61,7 +61,7 @@ export default function UserModal({ closeModal, user, projectId, members }) {
         >
           <Header>
             <HeaderPills>
-              {!user.projectRole.toLowerCase().includes("owner") ? (
+              {!user.projectRole?.toLowerCase().includes("owner") ? (
                 <DeleteButton onClick={deleteMember}>
                   <p>Remove from Team</p>
                 </DeleteButton>

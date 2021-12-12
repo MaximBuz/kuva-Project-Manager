@@ -19,11 +19,7 @@ import { useState } from "react";
 
 // Firebase tools
 import { db } from "../firebase-config";
-import {
-  collection,
-  doc,
-  updateDoc,
-} from "firebase/firestore";
+import { collection, doc, updateDoc } from "firebase/firestore";
 
 export default function ProfilePage() {
   // Get currently logged in user
@@ -48,11 +44,11 @@ export default function ProfilePage() {
   // Handle Submits
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const userRef = doc(db, "users", currentUser.id)
+    const userRef = doc(db, "users", currentUser.id);
     await updateDoc(userRef, inputs);
     setInputs({});
     window.location.reload(true);
-  }
+  };
 
   return (
     <>
@@ -94,7 +90,7 @@ export default function ProfilePage() {
             </Item>
             <Item onClick={() => setIsBirthdayModalVisible(true)}>
               <UilGift size={25} color="#515151" />
-              Birthday: {currentUser.birthDay || "Add a birthday"}
+              Birthday: {currentUser.birthday || "Add a birthday"}
               <UilPen className="edit-pen" />
             </Item>
             <Item onClick={() => setIsAnniversaryModalVisible(true)}>
@@ -109,7 +105,7 @@ export default function ProfilePage() {
           <h3>Edit Preferences</h3>
         </PreferencesSection>
 
-        {/* Here add all modals */}
+        {/* Handle Title Editing */}
 
         {isTitleModalVisible && (
           <GreyBackground onClick={() => setIsTitleModalVisible(false)}>
@@ -128,6 +124,173 @@ export default function ProfilePage() {
                   <input
                     type="text"
                     name="jobTitle"
+                    onChange={handleInputChange}
+                    required
+                  ></input>
+                </Section>
+                <button type="submit" value="Submit">
+                  Submit
+                </button>
+              </Form>
+            </ModalWrapper>
+          </GreyBackground>
+        )}
+
+        {/* Handle Email Editing */}
+
+        {isEmailModalVisible && (
+          <GreyBackground onClick={() => setIsEmailModalVisible(false)}>
+            <ModalWrapper onClick={(e) => e.stopPropagation()}>
+              <Header>
+                <Title>Change your Email Address</Title>
+                <CloseButton
+                  onClick={() => setIsEmailModalVisible(false)}
+                  viewBox="0 0 17 19"
+                >
+                  <path d="M1 1L16 18M16 1L1 18" stroke="black" />
+                </CloseButton>
+              </Header>
+              <Form onSubmit={handleSubmit}>
+                <Section>
+                  <input
+                    type="email"
+                    name="email"
+                    onChange={handleInputChange}
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                    onInvalid={(e) => {
+                      e.target.setCustomValidity(
+                        "Please enter a valid email address"
+                      );
+                    }}
+                    required
+                  ></input>
+                </Section>
+                <button type="submit" value="Submit">
+                  Submit
+                </button>
+              </Form>
+            </ModalWrapper>
+          </GreyBackground>
+        )}
+
+        {/* Handle Phone Editing */}
+
+        {isPhoneModalVisible && (
+          <GreyBackground onClick={() => setIsPhoneModalVisible(false)}>
+            <ModalWrapper onClick={(e) => e.stopPropagation()}>
+              <Header>
+                <Title>Change your Phone Number</Title>
+                <CloseButton
+                  onClick={() => setIsPhoneModalVisible(false)}
+                  viewBox="0 0 17 19"
+                >
+                  <path d="M1 1L16 18M16 1L1 18" stroke="black" />
+                </CloseButton>
+              </Header>
+              <Form onSubmit={handleSubmit}>
+                <Section>
+                  <input
+                    type="tel"
+                    name="phone"
+                    onChange={handleInputChange}
+                    pattern="^[0-9-+\s()]*$"
+                    onInvalid={(e) => {
+                      e.target.setCustomValidity(
+                        "Please enter a valid phone number"
+                      );
+                    }}
+                    required
+                  ></input>
+                </Section>
+                <button type="submit" value="Submit">
+                  Submit
+                </button>
+              </Form>
+            </ModalWrapper>
+          </GreyBackground>
+        )}
+
+        {/* Handle Location Editing */}
+
+        {isLocationModalVisible && (
+          <GreyBackground onClick={() => setIsLocationModalVisible(false)}>
+            <ModalWrapper onClick={(e) => e.stopPropagation()}>
+              <Header>
+                <Title>Change your Location</Title>
+                <CloseButton
+                  onClick={() => setIsLocationModalVisible(false)}
+                  viewBox="0 0 17 19"
+                >
+                  <path d="M1 1L16 18M16 1L1 18" stroke="black" />
+                </CloseButton>
+              </Header>
+              <Form onSubmit={handleSubmit}>
+                <Section>
+                  <input
+                    type="text"
+                    name="location"
+                    onChange={handleInputChange}
+                    required
+                  ></input>
+                </Section>
+                <button type="submit" value="Submit">
+                  Submit
+                </button>
+              </Form>
+            </ModalWrapper>
+          </GreyBackground>
+        )}
+
+        {/* Handle Birthday Editing */}
+
+        {isBirthdayModalVisible && (
+          <GreyBackground onClick={() => setIsBirthdayModalVisible(false)}>
+            <ModalWrapper onClick={(e) => e.stopPropagation()}>
+              <Header>
+                <Title>Change your Birthday</Title>
+                <CloseButton
+                  onClick={() => setIsBirthdayModalVisible(false)}
+                  viewBox="0 0 17 19"
+                >
+                  <path d="M1 1L16 18M16 1L1 18" stroke="black" />
+                </CloseButton>
+              </Header>
+              <Form onSubmit={handleSubmit}>
+                <Section>
+                  <input
+                    type="date"
+                    name="birthday"
+                    onChange={handleInputChange}
+                    required
+                  ></input>
+                </Section>
+                <button type="submit" value="Submit">
+                  Submit
+                </button>
+              </Form>
+            </ModalWrapper>
+          </GreyBackground>
+        )}
+
+        {/* Handle Anniversary Editing */}
+
+        {isAnniversaryModalVisible && (
+          <GreyBackground onClick={() => setIsAnniversaryModalVisible(false)}>
+            <ModalWrapper onClick={(e) => e.stopPropagation()}>
+              <Header>
+                <Title>Change your Work Anniversary</Title>
+                <CloseButton
+                  onClick={() => setIsAnniversaryModalVisible(false)}
+                  viewBox="0 0 17 19"
+                >
+                  <path d="M1 1L16 18M16 1L1 18" stroke="black" />
+                </CloseButton>
+              </Header>
+              <Form onSubmit={handleSubmit}>
+                <Section>
+                  <input
+                    type="date"
+                    name="workAnniversary"
                     onChange={handleInputChange}
                     required
                   ></input>
@@ -262,7 +425,7 @@ const GreyBackground = styled.div`
 `;
 
 const ModalWrapper = styled.div`
-  width: 30%;
+  width: 35%;
   max-width: 500px;
   position: fixed;
   top: 50%;
@@ -318,6 +481,11 @@ const Form = styled.form`
     transition: 0.3s;
 
     &:hover {
+      box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.10);
+      transform: scale(1.1);
+    }
+    &:focus {
+      box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.10);
       transform: scale(1.1);
     }
   }
@@ -343,5 +511,11 @@ const Section = styled.div`
     padding: 10px 15px 10px 15px;
     font-size: large;
     color: grey;
+    transition: 0.3s;
+
+    &:focus {
+      box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.10);
+      border-color: #35307e;
+    }
   }
 `;

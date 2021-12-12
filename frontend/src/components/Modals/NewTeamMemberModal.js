@@ -321,10 +321,22 @@ const SearchField = styled.div`
   button  {
     border-radius: 15px;
     font-size: large;
+    transition: 0.3s;
+
+    &:focus {
+      box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.10);
+      transform: scale(1.1);
+    }
   }
 
   input {
     flex-grow: 1;
+    transition: 0.3s;
+
+    &:focus {
+      box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.10);
+      border-color: #35307e;
+    }
   }
 `;
 
