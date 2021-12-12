@@ -41,6 +41,10 @@ const addTaskComment = () => ({
   type: tasksTypes.COMMENT_TASK,
 });
 
+const editTaskField = () => ({
+  type: tasksTypes.EDIT_TASK_FIELD,
+});
+
 export const cleanUpTasks = () => ({
   type: tasksTypes.CLEAN_UP_TASKS,
 });
@@ -71,16 +75,16 @@ export const addTaskInitiate = (task) => {
     const authorId = projectSnap.data().userId;
     const author = projectSnap
       .data()
-      .collaborators
-      .filter((collaborator) => collaborator.id === authorId)[0];
+      .collaborators.filter((collaborator) => collaborator.id === authorId)[0];
 
     // Now get the users that were assigned to this task
     // this has to be changed later to have multiple assigned users
     // for now, only one user can be assigned
     const assignedTo = projectSnap
       .data()
-      .collaborators
-      .filter((collaborator) => collaborator.id === task.taskAssignedTo);
+      .collaborators.filter(
+        (collaborator) => collaborator.id === task.taskAssignedTo
+      );
 
     await addDoc(collection(db, "tasks"), {
       identifier: task.identifier,
@@ -91,7 +95,7 @@ export const addTaskInitiate = (task) => {
         jobTitle: author.jobTitle || "No Job Title",
         photoUrl: author.photoUrl || null,
         projectRole: author.projectRole,
-        id: author.id
+        id: author.id,
       },
       userId: task.userId,
       taskAssignedToIds: [task.taskAssignedTo],
@@ -155,11 +159,26 @@ export const addTaskCommentInitiate = (taskId, user, comment) => {
         displayName: user.displayName,
         photoUrl: user.photoUrl,
         email: user.email,
-        jobTitle: user.jobTitle
+        jobTitle: user.jobTitle,
       },
       comment: comment,
       timeStamp: Timestamp.now(),
     });
     dispatch(addTaskComment());
+  };
+};
+
+export const editTaskFieldInitiate = (taskId, taskField, updatedValue) => {
+  return async function (dispatch) {
+    // find the task in firestore
+    const taskRef = doc(db, "tasks", taskId);
+    const taskSnap = await getDoc(taskRef);
+    const updatedObject = {}
+    updatedObject[taskField] = updatedValue;
+
+    // update the collaborators map field
+    await updateDoc(taskRef, updatedObject);
+    console.log("war drin")
+    dispatch(editTaskField());
   };
 };

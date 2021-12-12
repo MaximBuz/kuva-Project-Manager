@@ -7,15 +7,20 @@ import {
   deleteTaskInitiate,
   addTaskCommentInitiate,
   getTaskCommentsInitiate,
+  editTaskFieldInitiate
 } from "../../redux/tasks/tasks.actions";
 
 import styled from "styled-components";
 import { UilCommentAltSlash } from "@iconscout/react-unicons";
 
 function Modal({ closeModal, task }) {
+  // Get the current user from Redux store
   const { currentUser } = useSelector((state) => state.user);
+
+  // Get the Task priority from props
   let priority = task.taskPriority || "";
 
+  // Handle deletion of task
   const dispatch = useDispatch();
   const deleteTask = async () => {
     closeModal();
@@ -42,6 +47,7 @@ function Modal({ closeModal, task }) {
     setComment(e.target.value);
   };
 
+  // handle submitting comment
   const handleChatSubmit = async (e) => {
     console.log("enter funzt");
     e.preventDefault();
@@ -49,11 +55,85 @@ function Modal({ closeModal, task }) {
     setComment("");
   };
 
+  /* 
+  ----------------------------
+  Handling editable fields 
+  ----------------------------
+  */
+
+  // closing all editable fields
+
+  // Handle Title Editing
+  const [titleEditMode, setTitleEditMode] = useState(false);
+  const editTitleModeOnClick = (e) => {
+    setTitleEditMode(!titleEditMode);
+  };
+  const [titleInput, setTitleInput] = useState(
+    task.taskTitle || "No title added yet"
+  );
+  const onTitleChange = (e) => {
+    setTitleInput(e.target.value);
+  };
+  const handleTitleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(editTaskFieldInitiate(task.id, "taskTitle", titleInput));
+    setTitleEditMode(false);
+  };
+
+  // Handle Summary Editing
+  const [summaryEditMode, setSummaryEditMode] = useState(false);
+  const editSummaryModeOnClick = (e) => {
+    setSummaryEditMode(!summaryEditMode);
+  };
+  const [summaryInput, setSummaryInput] = useState(
+    task.taskSummary || "No summary added yet"
+  );
+  const onSummaryChange = (e) => {
+    setSummaryInput(e.target.value);
+  };
+  const handleSummarySubmit = (e) => {
+    e.preventDefault();
+    dispatch(editTaskFieldInitiate(task.id, "taskSummary", summaryInput));
+    setSummaryEditMode(false);
+  };
+
+  // Handle Description Editing
+  const [descriptionEditMode, setDescriptionEditMode] = useState(false);
+  const editDescriptionModeOnClick = (e) => {
+    setDescriptionEditMode(!descriptionEditMode);
+  };
+  const [descriptionInput, setDescriptionInput] = useState(
+    task.taskDescription || "No description added yet"
+  );
+  const onDescriptionChange = (e) => {
+    setDescriptionInput(e.target.value);
+  };
+  const handleDescriptionSubmit = (e) => {
+    e.preventDefault();
+    dispatch(editTaskFieldInitiate(task.id, "taskDescription", descriptionInput));
+    setDescriptionEditMode(false);
+  };
+
   return ReactDom.createPortal(
     <>
       <GreyBackground onClick={() => closeModal()}>
         <ModalWrapper
           onClick={(e) => {
+            /* Closing title edit mode on click outside */
+            titleEditMode &&
+              e.target.localName !== "input" &&
+              setTitleEditMode(false);
+
+            /* Closing summary edit mode on click outside */
+            summaryEditMode &&
+              e.target.localName !== "input" &&
+              setSummaryEditMode(false);
+
+            /* Closing description edit mode on click outside */
+            descriptionEditMode &&
+              e.target.localName !== "input" &&
+              setDescriptionEditMode(false);
+
             e.stopPropagation();
           }}
         >
@@ -72,7 +152,32 @@ function Modal({ closeModal, task }) {
           </Header>
 
           <TitleRow>
-            <Title>{task.taskTitle}</Title>
+            {/* Handle editing of Project Title */}
+            {titleEditMode ? (
+              <form
+                onSubmit={handleTitleSubmit}
+                style={{ textAlign: "center" }}
+              >
+                <TitleEdit
+                  defaultValue={titleInput}
+                  onChange={onTitleChange}
+                ></TitleEdit>
+                <input
+                  type="submit"
+                  style={{
+                    visibility: "hidden",
+                    display: "none",
+                    width: "0",
+                    height: "0",
+                  }}
+                />
+              </form>
+            ) : (
+              <Title editable={true} onClick={editTitleModeOnClick}>
+                {task.taskTitle}
+              </Title>
+            )}
+
             <p>
               Created{" "}
               {moment(new Date(task.timeStamp.seconds * 1000))
@@ -85,11 +190,59 @@ function Modal({ closeModal, task }) {
               <TextArea>
                 <SubSection>
                   <h3>Summary</h3>
-                  <p>{task.taskSummary}</p>
+                  {/* Handle editing of summary section */}
+                  {summaryEditMode ? (
+                    <form
+                      onSubmit={handleSummarySubmit}
+                      style={{ textAlign: "center" }}
+                    >
+                      <SummaryEdit
+                        defaultValue={summaryInput}
+                        onChange={onSummaryChange}
+                      ></SummaryEdit>
+                      <input
+                        type="submit"
+                        style={{
+                          visibility: "hidden",
+                          display: "none",
+                          width: "0",
+                          height: "0",
+                        }}
+                      />
+                    </form>
+                  ) : (
+                    <Summary editable={true} onClick={editSummaryModeOnClick}>
+                      {task.taskSummary}
+                    </Summary>
+                  )}
                 </SubSection>
                 <SubSection>
                   <h3>Description</h3>
-                  <p>{task.taskDescription}</p>
+                  {/* Handle editing of Project Description */}
+                  {descriptionEditMode ? (
+                    <form
+                      onSubmit={handleDescriptionSubmit}
+                      style={{ textAlign: "center" }}
+                    >
+                      <DescriptionEdit
+                        defaultValue={descriptionInput}
+                        onChange={onDescriptionChange}
+                      ></DescriptionEdit>
+                      <input
+                        type="submit"
+                        style={{
+                          visibility: "hidden",
+                          display: "none",
+                          width: "0",
+                          height: "0",
+                        }}
+                      />
+                    </form>
+                  ) : (
+                    <Description editable={true} onClick={editDescriptionModeOnClick}>
+                      {task.taskDescription}
+                    </Description>
+                  )}
                 </SubSection>
               </TextArea>
               <div className="comments-area">
@@ -293,7 +446,32 @@ const TitleRow = styled.div`
 const Title = styled.h1`
   font-size: xx-large;
   font-weight: bold;
+  padding: 5px 5px 5px 5px;
+  margin: -5px;
   color: #35307e;
+  :hover {
+    outline: ${(props) => {
+      if (props.editable) {
+        return "solid";
+      } else {
+        return "none";
+      }
+    }};
+    border-radius: 5px;
+    outline-width: 1.5px;
+  }
+`;
+
+const TitleEdit = styled.input`
+  width: 100%;
+  font-size: xx-large;
+  font-weight: bold;
+  padding: 5px 5px 5px 5px;
+  margin: -5px;
+  color: #35307e;
+  border-radius: 5px;
+  outline-width: 1.5px;
+  outline-color: #35307e;
 `;
 
 const Content = styled.div`
@@ -328,6 +506,35 @@ const SubSection = styled.div`
   gap: 5px;
   height: 100%;
 `;
+
+const Summary = styled.p`
+  padding: 2px 2px 2px 2px;
+  margin: -2px;
+  :hover {
+    outline: ${(props) => {
+      if (props.editable) {
+        return "solid";
+      } else {
+        return "none";
+      }
+    }};
+    border-radius: 5px;
+    outline-width: 1.5px;
+  }
+`;
+
+const SummaryEdit = styled.input`
+  width: 100%;
+  padding: 2px 2px 2px 2px;
+  margin: -2px;
+  border-radius: 5px;
+  outline-width: 1.5px;
+`;
+
+const Description = styled(Summary)`
+`;
+
+const DescriptionEdit = styled(SummaryEdit)``
 
 const TextArea = styled.div`
   display: flex;
@@ -461,8 +668,8 @@ const Input = styled.input`
   color: grey;
   transition: 0.3s;
 
-    &:focus {
-      box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.10);
-      border-color: #35307e;
-    }
+  &:focus {
+    box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
+    border-color: #35307e;
+  }
 `;
