@@ -3,7 +3,8 @@ import {
     UilUser,
     UilDialpad,
     UilUsersAlt,
-    UilSchedule
+    UilSchedule,
+    UilArchiveAlt
 } from '@iconscout/react-unicons'
 
 
@@ -12,6 +13,7 @@ const accountIcon = <UilUser/>;
 const tasksIcon = <UilDialpad/>;
 const collaboratorsIcon = <UilUsersAlt/>;
 const backlogIcon = <UilSchedule/>;
+const archiveIcon = <UilArchiveAlt/>
 
 export const projectsOverviewItems = [{
     icon: projectsIcon,
@@ -56,6 +58,12 @@ export const ProjectTaskOverviewItems = [{
     link: "backlog",
     active: false
 },{
+    icon: archiveIcon,
+    text: "Archive",
+    // link wird im MenuItem component erweitet
+    link: "archive",
+    active: false
+},{
     icon: collaboratorsIcon,
     text: "Team",
     // link wird im MenuItem component erweitet
@@ -82,9 +90,44 @@ export const ProjectBacklogItems = [{
     link: "backlog",
     active: true
 },{
+    icon: archiveIcon,
+    text: "Archive",
+    // link wird im MenuItem component erweitet
+    link: "archive",
+    active: false
+},{
     icon: collaboratorsIcon,
     text: "Team",
     // link wird im MenuItem component erweitet
+    link: "team",
+    active: false
+}];
+
+export const ProjectArchiveItems = [{
+    icon: projectsIcon,
+    text: "Projects",
+    link: "/",
+    active: false
+},{
+    icon: tasksIcon,
+    text: "Tasks",
+    // link wird im MenuItem component erweitet
+    link: "/project/{CHANGETHIS}/",
+    active: false
+},{
+    icon: backlogIcon,
+    text: "Backlog",
+    link: "backlog",
+    active: false
+},{
+    icon: archiveIcon,
+    text: "Archive",
+    // link wird im MenuItem component erweitet
+    link: "archive",
+    active: true
+},{
+    icon: collaboratorsIcon,
+    text: "Team",
     link: "team",
     active: false
 }];
@@ -106,6 +149,12 @@ export const ProjectTeamItems = [{
     icon: backlogIcon,
     text: "Backlog",
     link: "backlog",
+    active: false
+},{
+    icon: archiveIcon,
+    text: "Archive",
+    // link wird im MenuItem component erweitet
+    link: "archive",
     active: false
 },{
     icon: collaboratorsIcon,

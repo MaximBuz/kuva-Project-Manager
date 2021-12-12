@@ -37,8 +37,18 @@ const SearchField = styled.input`
 const ColumnsWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 15px;
+  overflow-x: scroll;
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none; 
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const Column = styled.div`
@@ -49,6 +59,7 @@ const Column = styled.div`
   border-width: thin;
   border-radius: 25px;
   min-height: 75vh;
+  min-width: 280px;
   width: 280px;
   display: flex;
   flex-direction: column;

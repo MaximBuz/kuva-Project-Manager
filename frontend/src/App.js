@@ -13,6 +13,7 @@ import ProfilePage from "./pages/ProfilePage";
 import TasksPage from "./pages/TasksPage";
 import LoginPage from "./pages/login/index";
 import TeamPage from "./pages/TeamPage";
+import TaskArchivePage from "./pages/TaskArchivePage";
 
 // Layouts
 import MainLayout from "./layouts/MainLayout";
@@ -110,6 +111,19 @@ const App = (props) => {
                     key={document.location.href}
                   >
                     <BacklogPage />
+                  </MainLayout>
+                )}
+              />
+
+              <Route
+                path="/project/:identifier/archive"
+                render={(props) => (
+                  <MainLayout
+                    menuContent={ProjectBacklogItems}
+                    {...props}
+                    key={document.location.href}
+                  >
+                    <TaskArchivePage />
                   </MainLayout>
                 )}
               />

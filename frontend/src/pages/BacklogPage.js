@@ -1,5 +1,5 @@
 import React from "react";
-import TaskRow from "../components/Cards/TaskRow";
+import TaskRow from "../components/Cards/TaskRowDraggable";
 import CounterBlob from "../components/Misc/CounterBlob";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";

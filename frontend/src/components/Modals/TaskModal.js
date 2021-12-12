@@ -7,13 +7,18 @@ import {
   deleteTaskInitiate,
   addTaskCommentInitiate,
   getTaskCommentsInitiate,
-  editTaskFieldInitiate
+  editTaskFieldInitiate,
+  archiveTaskInitiate,
+  unArchiveTaskInitiate,
 } from "../../redux/tasks/tasks.actions";
 
 import styled from "styled-components";
 import { UilCommentAltSlash } from "@iconscout/react-unicons";
 
 function Modal({ closeModal, task }) {
+  // Initializing Redux dispatching
+  const dispatch = useDispatch();
+
   // Get the current user from Redux store
   const { currentUser } = useSelector((state) => state.user);
 
@@ -21,10 +26,23 @@ function Modal({ closeModal, task }) {
   let priority = task.taskPriority || "";
 
   // Handle deletion of task
-  const dispatch = useDispatch();
   const deleteTask = async () => {
     closeModal();
     await dispatch(deleteTaskInitiate(task.id));
+    window.location.reload(true);
+  };
+
+  // Handle archivation of task
+  const archiveTask = async () => {
+    closeModal();
+    await dispatch(archiveTaskInitiate(task.id));
+    window.location.reload(true);
+  };
+
+  // Handle unarchivation of task
+  const unArchiveTask = async () => {
+    closeModal();
+    await dispatch(unArchiveTaskInitiate(task.id));
     window.location.reload(true);
   };
 
@@ -110,7 +128,9 @@ function Modal({ closeModal, task }) {
   };
   const handleDescriptionSubmit = (e) => {
     e.preventDefault();
-    dispatch(editTaskFieldInitiate(task.id, "taskDescription", descriptionInput));
+    dispatch(
+      editTaskFieldInitiate(task.id, "taskDescription", descriptionInput)
+    );
     setDescriptionEditMode(false);
   };
 
@@ -145,6 +165,15 @@ function Modal({ closeModal, task }) {
               <DeleteButton onClick={deleteTask}>
                 <p>delete</p>
               </DeleteButton>
+              {task.archived ? (
+                <ArchiveButton onClick={unArchiveTask}>
+                  <p>unarchive</p>
+                </ArchiveButton>
+              ) : (
+                <ArchiveButton onClick={archiveTask}>
+                  <p>archive</p>
+                </ArchiveButton>
+              )}
             </HeaderPills>
             <CloseButton onClick={() => closeModal()} viewBox="0 0 17 19">
               <path d="M1 1L16 18M16 1L1 18" stroke="black" />
@@ -239,7 +268,10 @@ function Modal({ closeModal, task }) {
                       />
                     </form>
                   ) : (
-                    <Description editable={true} onClick={editDescriptionModeOnClick}>
+                    <Description
+                      editable={true}
+                      onClick={editDescriptionModeOnClick}
+                    >
                       {task.taskDescription}
                     </Description>
                   )}
@@ -427,6 +459,10 @@ const DeleteButton = styled.div`
   cursor: pointer;
 `;
 
+const ArchiveButton = styled(DeleteButton)`
+  background-color: #f8b965;
+`;
+
 const CloseButton = styled.svg.attrs({
   width: "24",
   height: "24",
@@ -531,10 +567,9 @@ const SummaryEdit = styled.input`
   outline-width: 1.5px;
 `;
 
-const Description = styled(Summary)`
-`;
+const Description = styled(Summary)``;
 
-const DescriptionEdit = styled(SummaryEdit)``
+const DescriptionEdit = styled(SummaryEdit)``;
 
 const TextArea = styled.div`
   display: flex;

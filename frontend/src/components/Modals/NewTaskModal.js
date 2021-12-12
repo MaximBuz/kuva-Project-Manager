@@ -33,6 +33,15 @@ const FormWrapper = styled.div`
   box-shadow: 0px 5px 50px 10px rgba(0, 0, 0, 0.45);
   overflow-y: scroll;
 
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none; 
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
   display: flex;
   flex-direction: column;
   gap: 20px;

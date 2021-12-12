@@ -45,6 +45,19 @@ const editTaskField = () => ({
   type: tasksTypes.EDIT_TASK_FIELD,
 });
 
+const archiveTask = () => ({
+  type: tasksTypes.ARCHIVE_TASK,
+})
+
+const unArchiveTask = () => ({
+  type: tasksTypes.ARCHIVE_TASK,
+})
+
+const getArchivedTasks = (tasks) => ({
+  type: tasksTypes.GET_ARCHIVED_TASKS,
+  payload: tasks
+})
+
 export const cleanUpTasks = () => ({
   type: tasksTypes.CLEAN_UP_TASKS,
 });
@@ -54,7 +67,8 @@ export const getTasksInitiate = (projectId) => {
   return function (dispatch) {
     const q = query(
       collection(db, "tasks"),
-      where("projectId", "==", projectId)
+      where("projectId", "==", projectId),
+      where("archived", "==", false)
     );
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const tasks = [];
@@ -178,7 +192,52 @@ export const editTaskFieldInitiate = (taskId, taskField, updatedValue) => {
 
     // update the collaborators map field
     await updateDoc(taskRef, updatedObject);
-    console.log("war drin")
     dispatch(editTaskField());
+  };
+};
+
+export const archiveTaskInitiate = (taskId) => {
+  return async function (dispatch) {
+    // find the task in firestore
+    const taskRef = doc(db, "tasks", taskId);
+    const taskSnap = await getDoc(taskRef);
+
+    // update the collaborators map field
+    await updateDoc(taskRef, {
+      archived: true
+    });
+    dispatch(archiveTask());
+  };
+};
+
+export const unArchiveTaskInitiate = (taskId) => {
+  return async function (dispatch) {
+    // find the task in firestore
+    const taskRef = doc(db, "tasks", taskId);
+    const taskSnap = await getDoc(taskRef);
+
+    // update the collaborators map field
+    await updateDoc(taskRef, {
+      archived: false
+    });
+    dispatch(unArchiveTask());
+  };
+};
+
+
+export const getArchivedTasksInitiate = (projectId) => {
+  return function (dispatch) {
+    const q = query(
+      collection(db, "tasks"),
+      where("projectId", "==", projectId),
+      where("archived", "==", true)
+    );
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const tasks = [];
+      querySnapshot.forEach((doc) => {
+        tasks.push({ ...doc.data(), id: doc.id });
+      });
+      dispatch(getArchivedTasks(tasks));
+    });
   };
 };
