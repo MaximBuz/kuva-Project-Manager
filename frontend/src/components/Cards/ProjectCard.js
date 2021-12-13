@@ -5,7 +5,6 @@ import styled from "styled-components";
 const Card = styled.div`
   background-color: white;
   border-radius: 25px;
-  -webkit-box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.15);
   box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.15);
   width: 350px;
   height: 200px;

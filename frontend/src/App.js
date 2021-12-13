@@ -14,6 +14,7 @@ import TasksPage from "./pages/TasksPage";
 import LoginPage from "./pages/login/index";
 import TeamPage from "./pages/TeamPage";
 import TaskArchivePage from "./pages/TaskArchivePage";
+import ProjectSettingsPage from "./pages/ProjectSettingsPage";
 
 // Layouts
 import MainLayout from "./layouts/MainLayout";
@@ -23,7 +24,9 @@ import {
   ProjectTaskOverviewItems,
   ProjectBacklogItems,
   ProjectTeamItems,
-  profilePageItems
+  ProjectArchiveItems,
+  profilePageItems,
+  ProjectSettingsItems
 } from "./components/Menus/LeftMenu/MenuContents";
 
 // Firebase
@@ -119,7 +122,7 @@ const App = (props) => {
                 path="/project/:identifier/archive"
                 render={(props) => (
                   <MainLayout
-                    menuContent={ProjectBacklogItems}
+                    menuContent={ProjectArchiveItems}
                     {...props}
                     key={document.location.href}
                   >
@@ -140,6 +143,20 @@ const App = (props) => {
                   </MainLayout>
                 )}
               />
+
+              <Route
+                path="/project/:identifier/settings"
+                render={(props) => (
+                  <MainLayout
+                    menuContent={ProjectSettingsItems}
+                    {...props}
+                    key={document.location.href}
+                  >
+                    <ProjectSettingsPage />
+                  </MainLayout>
+                )}
+              />
+
             </div>
           </div>
         ) : (

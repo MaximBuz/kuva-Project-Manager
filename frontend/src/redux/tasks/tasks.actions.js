@@ -190,7 +190,6 @@ export const editTaskFieldInitiate = (taskId, taskField, updatedValue) => {
     const updatedObject = {}
     updatedObject[taskField] = updatedValue;
 
-    // update the collaborators map field
     await updateDoc(taskRef, updatedObject);
     dispatch(editTaskField());
   };
@@ -202,7 +201,6 @@ export const archiveTaskInitiate = (taskId) => {
     const taskRef = doc(db, "tasks", taskId);
     const taskSnap = await getDoc(taskRef);
 
-    // update the collaborators map field
     await updateDoc(taskRef, {
       archived: true
     });
@@ -216,7 +214,6 @@ export const unArchiveTaskInitiate = (taskId) => {
     const taskRef = doc(db, "tasks", taskId);
     const taskSnap = await getDoc(taskRef);
 
-    // update the collaborators map field
     await updateDoc(taskRef, {
       archived: false
     });

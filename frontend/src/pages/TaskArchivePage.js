@@ -20,13 +20,13 @@ function TaskArchivePage() {
 
   return (
     <Wrapper>
-      <TitleRow>
-        <h2>Archived Tasks</h2>
-        <CounterBlob count={archivedTasks.length} />
-      </TitleRow>
-      <TaskList>
-        {archivedTasks
-          .map((task, index) => {
+      <Section>
+        <TitleRow>
+          <h2>Archived Tasks</h2>
+          <CounterBlob count={archivedTasks.length} />
+        </TitleRow>
+        <TaskList>
+          {archivedTasks.map((task, index) => {
             return (
               <TaskRow
                 onClick={() => {
@@ -46,7 +46,8 @@ function TaskArchivePage() {
               />
             );
           })}
-      </TaskList>
+        </TaskList>
+      </Section>
       {openModal && (
         <TaskModal
           closeModal={setOpenModal}
@@ -79,7 +80,8 @@ const Section = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 50%;
+  width: 45%;
+  min-width: 400px;
 `;
 
 const TitleRow = styled.div`

@@ -1,7 +1,5 @@
 // Components
 import UserAvatar from "../components/Misc/UserAvatar";
-import { Modal, Button } from "antd";
-import { DatePicker, Space } from "antd";
 
 // Styling
 import styled from "styled-components";

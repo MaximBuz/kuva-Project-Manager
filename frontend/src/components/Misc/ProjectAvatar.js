@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const UserCardAvatar = styled.div`
+const ProjectAvatarWrapper = styled.div`
   width: ${(props) => props.size}px;
   height: ${(props) => props.size}px;
   border-radius: 10000px;
@@ -11,28 +11,28 @@ const UserCardAvatar = styled.div`
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  h1 {
+    font-size: xx-large;
+  }
 `;
 
-const UserProfilePicture = styled.img`
+const ProjectPicture = styled.img`
   object-fit: contain;
   object-position: 50% 50%;
   width: 100%;
   height: 100%;
 `;
 
-function UserAvatar({ inComments, name, url, size }) {
+function ProjectAvatar({ projectKey, url, size }) {
   return (
-    <UserCardAvatar inComments={inComments} url={url} size={size}>
+    <ProjectAvatarWrapper url={url} size={size}>
       {url ? (
-        <UserProfilePicture inComments={inComments} src={url} />
+        <ProjectPicture src={url} />
       ) : (
-        name
-          ?.split(" ")
-          .map((n) => n[0].toUpperCase())
-          .join(" ")
+        <h1>{projectKey}</h1>
       )}
-    </UserCardAvatar>
+    </ProjectAvatarWrapper>
   );
 }
 
-export default UserAvatar;
+export default ProjectAvatar;

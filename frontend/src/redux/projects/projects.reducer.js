@@ -27,6 +27,10 @@ const projectsReducer = (state=INITIAL_STATE, action) => {
             return {
                 ...state,
             };
+        case projectsTypes.EDIT_PROJECT_FIELD:
+            return {
+                ...state,
+            };
         default:
             return state;
   }

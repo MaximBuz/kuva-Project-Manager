@@ -271,7 +271,7 @@ const Section = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 50%;
+  width: 45%;
 `;
 
 const TitleRow = styled.div`

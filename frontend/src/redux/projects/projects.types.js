@@ -8,6 +8,7 @@ const projectsTypes = {
   EDIT_MEMBER: "EDIT_MEMBER",
   DELETE_MEMBER: "DELETE_MEMBER",
   GET_MEMBERS: "GET_MEMBERS",
+  EDIT_PROJECT_FIELD: "EDIT_PROJECT_FIELD",
 };
 
 export default projectsTypes;

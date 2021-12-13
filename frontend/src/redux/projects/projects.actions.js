@@ -38,6 +38,10 @@ const editMember = () => ({
   type: projectsTypes.EDIT_MEMBER,
 })
 
+const editProjectField = () => ({
+  type: projectsTypes.EDIT_PROJECT_FIELD
+})
+
 /* 
 -------------------------------------
 Projects actions 
@@ -66,6 +70,7 @@ export const addProjectInitiate = (project, user) => {
       projectKey: project.projectKey,
       userId: project.userId,
       projectTitle: project.projectTitle,
+      projectDescription: "Add a project description",
       timeStamp: Timestamp.now(),
       projectSummary: project.projectSummary,
       collaboratorIds: [user.id],
@@ -140,5 +145,19 @@ export const deleteMemberInitiate = (projectId, newMembers, newMemberIds) => {
       collaborators: newMembers
     });
     dispatch(deleteMember());
+  };
+};
+
+
+export const editProjectFieldInitiate = (projectId, projectField, updatedValue) => {
+  return async function (dispatch) {
+    // find the project in firestore
+    const projectRef = doc(db, "projects", projectId);
+    const projectSnap = await getDoc(projectRef);
+    const updatedObject = {}
+    updatedObject[projectField] = updatedValue;
+
+    await updateDoc(projectRef, updatedObject);
+    dispatch(editProjectField());
   };
 };

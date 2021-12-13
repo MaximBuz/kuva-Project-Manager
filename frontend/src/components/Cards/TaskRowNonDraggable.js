@@ -18,6 +18,15 @@ function TaskRow(props) {
         <p>{priority}</p>
       </PriorityPill>
       <Title>{title}</Title>
+      <svg
+        width="11"
+        height="19"
+        viewBox="0 0 11 19"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M1 1L9.5 9.5L1 18" className="arrow-path" stroke="black" />
+      </svg>
     </Row>
   );
 }
@@ -45,6 +54,15 @@ const Row = styled.div`
   cursor: pointer;
   line-height: normal;
   margin-bottom: 10px;
+
+  svg {
+    margin-left: auto;
+  }
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.15);
+  }
 `;
 
 const PriorityPill = styled.div`
@@ -85,7 +103,7 @@ const Title = styled.h2`
   overflow-x: hidden !important;
   text-overflow: ellipsis;
 `;
-const DragHandle = styled.div`
+const Arrow = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
