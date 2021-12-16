@@ -16,6 +16,7 @@ import { useState } from "react";
 import {
   editProjectFieldInitiate,
   deleteProjectInitiate,
+  archiveProjectInitiate
 } from "../redux/projects/projects.actions";
 
 export default function ProjectSettingsPage() {
@@ -25,6 +26,12 @@ export default function ProjectSettingsPage() {
   // Handle deleting project
   const deleteProject = async () => {
     await dispatch(deleteProjectInitiate(identifier));
+    history.push("/");
+  };
+
+  // Handle archiving project
+  const archiveProject = async () => {
+    await dispatch(archiveProjectInitiate(identifier));
     history.push("/");
   };
 
@@ -137,7 +144,7 @@ export default function ProjectSettingsPage() {
                   Caution: Cannot undo this action!
                 </span>
               </DeleteButton>
-              <ArchiveButton onClick={deleteProject}>
+              <ArchiveButton onClick={archiveProject}>
                 <p>Archive</p>
               </ArchiveButton>
             </div>

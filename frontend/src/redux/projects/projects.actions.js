@@ -154,7 +154,7 @@ export const deleteProjectInitiate = (projectId) => {
   };
 };
 
-export const archiveTaskInitiate = (projectId) => {
+export const archiveProjectInitiate = (projectId) => {
   return async function (dispatch) {
     // find the task in firestore
     const projectRef = doc(db, "projects", projectId);

@@ -23,9 +23,13 @@ function ProjectsPage() {
   const [openModal, setOpenModal] = useState(false);
 
   // Reading current state from Redux
-  const { projects, archivedProjects } = useSelector((state) => state.projects);
+  const { projects } = useSelector((state) => state.projects);
   const { currentUser } = useSelector((state) => state.user);
 
+  // filtering into archived and unarchived
+  const activeProjects = projects.filter(project => !project.archived)
+  const archivedProjects = projects.filter(project => project.archived)
+  
   // If logged in, get projects from firestore
   const dispatch = useDispatch();
   useEffect(() => {
@@ -33,9 +37,9 @@ function ProjectsPage() {
   }, [currentUser, dispatch]);
 
   // Count Projects
-  let projectCount = projects.length;
+  let projectCount = activeProjects.length;
   useEffect(() => {
-    projectCount = projects.length;
+    projectCount = activeProjects.length;
   }, [projects]);
 
   // Count Archived Projects
@@ -93,8 +97,8 @@ function ProjectsPage() {
                 />
               );
             })
-          : projects &&
-            projects.map((item, index) => {
+          : activeProjects &&
+          activeProjects.map((item, index) => {
               return (
                 <ProjectCard
                   index={index}

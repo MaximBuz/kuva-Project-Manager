@@ -2,7 +2,6 @@ import projectsTypes from './projects.types';
 
 const INITIAL_STATE = {
   projects: [],
-  archivedProjects: []
 };
 
 const projectsReducer = (state=INITIAL_STATE, action) => {
@@ -15,7 +14,7 @@ const projectsReducer = (state=INITIAL_STATE, action) => {
     case projectsTypes.GET_ARCHIVED_PROJECTS:
             return {
                 ...state,
-                archivedProjects: action.payload
+                projects: action.payload
             };
         case projectsTypes.ADD_PROJECT:
             return {
