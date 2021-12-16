@@ -101,6 +101,7 @@ export const addTaskInitiate = (task) => {
       );
 
     await addDoc(collection(db, "tasks"), {
+      archived: false,
       identifier: task.identifier,
       projectId: task.projectId,
       author: {

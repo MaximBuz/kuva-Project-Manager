@@ -7,19 +7,34 @@ import ProjectAvatar from "../components/Misc/ProjectAvatar";
 // Styling
 import styled from "styled-components";
 
+// Routing
+import { useHistory } from "react-router-dom";
+
 // State Management
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { editProjectFieldInitiate } from "../redux/projects/projects.actions"
+import { editProjectFieldInitiate, deleteProjectInitiate } from "../redux/projects/projects.actions"
 
 export default function ProjectSettingsPage() {
   // Get Project from identifier in URL
   const { identifier } = useParams();
+  
+  // Handle deleting project
+  const deleteProject = async () => {
+    await dispatch(deleteProjectInitiate(identifier));
+    history.push("/");
+  };
+  
+  // Get the project from state
   const { projects } = useSelector((state) => state.projects);
-  const project = projects.filter((project) => project.id === identifier)[0];
-
+  const project = projects?.filter((project) => project.id === identifier)[0];
+  
   // Initializing Redux dispatching
   const dispatch = useDispatch();
+
+  // Initializing rerouting (after deletion or archivation of project)
+  let history = useHistory();
+
 
 
 
@@ -35,14 +50,14 @@ export default function ProjectSettingsPage() {
     setProjectTitleEditMode(true);
   };
   const [projectTitleInput, setProjectTitleInput] = useState(
-    project.projectTitle
+    project?.projectTitle
   );
   const onProjectTitleChange = (e) => {
     setProjectTitleInput(e.target.value);
   };
   const handleTitleSubmit = (e) => {
     e.preventDefault();
-    dispatch(editProjectFieldInitiate(project.id, "projectTitle", summaryInput));
+    dispatch(editProjectFieldInitiate(project?.id, "projectTitle", summaryInput));
     setProjectTitleEditMode(false);
   };
 
@@ -52,14 +67,14 @@ export default function ProjectSettingsPage() {
     setSummaryEditMode(!summaryEditMode);
   };
   const [summaryInput, setSummaryInput] = useState(
-    project.projectSummary || "No summary added yet"
+    project?.projectSummary || "No summary added yet"
   );
   const onSummaryChange = (e) => {
     setSummaryInput(e.target.value);
   };
   const handleSummarySubmit = (e) => {
     e.preventDefault();
-    dispatch(editProjectFieldInitiate(project.id, "projectSummary", summaryInput));
+    dispatch(editProjectFieldInitiate(project?.id, "projectSummary", summaryInput));
     setSummaryEditMode(false);
   };
 
@@ -69,14 +84,14 @@ export default function ProjectSettingsPage() {
     setDescriptionEditMode(!descriptionEditMode);
   };
   const [descriptionInput, setDescriptionInput] = useState(
-    project.projectDescription || "No description added yet"
+    project?.projectDescription || "No description added yet"
   );
   const onDescriptionChange = (e) => {
     setDescriptionInput(e.target.value);
   };
   const handleDescriptionSubmit = (e) => {
     e.preventDefault();
-    dispatch(editProjectFieldInitiate(project.id, "projectDescription", descriptionInput));
+    dispatch(editProjectFieldInitiate(project?.id, "projectDescription", descriptionInput));
     setDescriptionEditMode(false);
   };
 
@@ -100,8 +115,8 @@ export default function ProjectSettingsPage() {
       >
         <WelcomeWrapper>
           <ProjectAvatar
-            projectKey={project.projectKey}
-            url={project.photoUrl || null}
+            projectKey={project?.projectKey}
+            url={project?.photoUrl || null}
             size={150}
           />
           <WelcomeMessage>
@@ -128,7 +143,7 @@ export default function ProjectSettingsPage() {
               </form>
             ) : (
               <Title editable={true} onClick={editTitleModeOnClick}>
-                {project.projectTitle || "No Title added yet"}
+                {project?.projectTitle || "No Title added yet"}
               </Title>
             )}
 
@@ -155,9 +170,10 @@ export default function ProjectSettingsPage() {
               </form>
             ) : (
               <Summary editable={true} onClick={editSummaryModeOnClick}>
-                {project.projectSummary || "No Summary added yet"}
+                {project?.projectSummary || "No Summary added yet"}
               </Summary>
             )}
+            <p onClick={deleteProject}>Delete</p>
 
           </WelcomeMessage>
         </WelcomeWrapper>
@@ -184,7 +200,7 @@ export default function ProjectSettingsPage() {
               </form>
             ) : (
               <Description editable={true} onClick={editDescriptionModeOnClick}>
-                {project.projectDescription || "Add a project description"}
+                {project?.projectDescription || "Add a project description"}
               </Description>
             )}
       </Wrapper>
@@ -205,7 +221,6 @@ const WelcomeMessage = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  width: 80%;
 `;
 
 const WelcomeWrapper = styled.div`

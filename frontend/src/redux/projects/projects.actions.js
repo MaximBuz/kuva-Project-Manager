@@ -10,6 +10,7 @@ import {
   where,
   getDoc,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 
 const getProjects = (projects) => ({
@@ -36,11 +37,15 @@ const deleteMember = () => ({
 
 const editMember = () => ({
   type: projectsTypes.EDIT_MEMBER,
-})
+});
 
 const editProjectField = () => ({
-  type: projectsTypes.EDIT_PROJECT_FIELD
-})
+  type: projectsTypes.EDIT_PROJECT_FIELD,
+});
+
+const deleteProject = () => ({
+  type: projectsTypes.DELETE_PROJECT,
+});
 
 /* 
 -------------------------------------
@@ -89,6 +94,38 @@ export const addProjectInitiate = (project, user) => {
   };
 };
 
+export const deleteProjectInitiate = (projectId) => {
+  return async function (dispatch) {
+    // first delete all tasks
+    const taskQuery = query(
+      collection(db, "tasks"),
+      where("projectId", "==", projectId)
+    );
+
+    onSnapshot(taskQuery, (querySnapshot) => {
+      querySnapshot.forEach(async (task) => {
+        console.log(task.id)
+        // delete all taskComments of doc
+        const commentQuery = query(
+          collection(db, "taskComments"),
+          where("taskId", "==", task.id)
+        );
+        onSnapshot(commentQuery, (commentQuerySnapshot) => {
+          commentQuerySnapshot.forEach((comment) => deleteDoc(comment.ref));
+        });
+        
+        // Finally delete doc
+        await deleteDoc(task.ref);
+      });
+    });
+
+    // then delete project
+    const projectRef = doc(db, "projects", projectId);
+    await deleteDoc(projectRef);
+    dispatch(deleteProject());
+  };
+};
+
 /* 
 -------------------------------------
 Team Members / Collaborators actions 
@@ -131,30 +168,33 @@ export const editMemberInitiate = (projectId, updatedMembers) => {
 
     // update the collaborators map field
     await updateDoc(projectRef, {
-      collaborators: updatedMembers
-    })
-    dispatch(editMember())
-  }
-}
+      collaborators: updatedMembers,
+    });
+    dispatch(editMember());
+  };
+};
 
 export const deleteMemberInitiate = (projectId, newMembers, newMemberIds) => {
   return async function (dispatch) {
     const projectRef = doc(db, "projects", projectId);
     await updateDoc(projectRef, {
       collaboratorIds: newMemberIds,
-      collaborators: newMembers
+      collaborators: newMembers,
     });
     dispatch(deleteMember());
   };
 };
 
-
-export const editProjectFieldInitiate = (projectId, projectField, updatedValue) => {
+export const editProjectFieldInitiate = (
+  projectId,
+  projectField,
+  updatedValue
+) => {
   return async function (dispatch) {
     // find the project in firestore
     const projectRef = doc(db, "projects", projectId);
     const projectSnap = await getDoc(projectRef);
-    const updatedObject = {}
+    const updatedObject = {};
     updatedObject[projectField] = updatedValue;
 
     await updateDoc(projectRef, updatedObject);
