@@ -13,30 +13,30 @@ import { useHistory } from "react-router-dom";
 // State Management
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { editProjectFieldInitiate, deleteProjectInitiate } from "../redux/projects/projects.actions"
+import {
+  editProjectFieldInitiate,
+  deleteProjectInitiate,
+} from "../redux/projects/projects.actions";
 
 export default function ProjectSettingsPage() {
   // Get Project from identifier in URL
   const { identifier } = useParams();
-  
+
   // Handle deleting project
   const deleteProject = async () => {
     await dispatch(deleteProjectInitiate(identifier));
     history.push("/");
   };
-  
+
   // Get the project from state
   const { projects } = useSelector((state) => state.projects);
   const project = projects?.filter((project) => project.id === identifier)[0];
-  
+
   // Initializing Redux dispatching
   const dispatch = useDispatch();
 
   // Initializing rerouting (after deletion or archivation of project)
   let history = useHistory();
-
-
-
 
   /* 
   ----------------------------
@@ -57,7 +57,9 @@ export default function ProjectSettingsPage() {
   };
   const handleTitleSubmit = (e) => {
     e.preventDefault();
-    dispatch(editProjectFieldInitiate(project?.id, "projectTitle", summaryInput));
+    dispatch(
+      editProjectFieldInitiate(project?.id, "projectTitle", summaryInput)
+    );
     setProjectTitleEditMode(false);
   };
 
@@ -74,7 +76,9 @@ export default function ProjectSettingsPage() {
   };
   const handleSummarySubmit = (e) => {
     e.preventDefault();
-    dispatch(editProjectFieldInitiate(project?.id, "projectSummary", summaryInput));
+    dispatch(
+      editProjectFieldInitiate(project?.id, "projectSummary", summaryInput)
+    );
     setSummaryEditMode(false);
   };
 
@@ -91,7 +95,13 @@ export default function ProjectSettingsPage() {
   };
   const handleDescriptionSubmit = (e) => {
     e.preventDefault();
-    dispatch(editProjectFieldInitiate(project?.id, "projectDescription", descriptionInput));
+    dispatch(
+      editProjectFieldInitiate(
+        project?.id,
+        "projectDescription",
+        descriptionInput
+      )
+    );
     setDescriptionEditMode(false);
   };
 
@@ -120,6 +130,17 @@ export default function ProjectSettingsPage() {
             size={150}
           />
           <WelcomeMessage>
+            <div style={{display: "flex", gap: "10px"}}>
+              <DeleteButton onClick={deleteProject}>
+                <p>Delete Project</p>
+                <span className="tooltiptext">
+                  Caution: Cannot undo this action!
+                </span>
+              </DeleteButton>
+              <ArchiveButton onClick={deleteProject}>
+                <p>Archive</p>
+              </ArchiveButton>
+            </div>
             {/* Editable Project Title */}
 
             {projectTitleEditMode ? (
@@ -173,36 +194,34 @@ export default function ProjectSettingsPage() {
                 {project?.projectSummary || "No Summary added yet"}
               </Summary>
             )}
-            <p onClick={deleteProject}>Delete</p>
-
           </WelcomeMessage>
         </WelcomeWrapper>
-            {/* Editable Project Description */}
+        {/* Editable Project Description */}
 
-            {descriptionEditMode ? (
-              <form
-                onSubmit={handleDescriptionSubmit}
-                style={{ textAlign: "center" }}
-              >
-                <DescriptionEdit
-                  defaultValue={descriptionInput}
-                  onChange={onDescriptionChange}
-                ></DescriptionEdit>
-                <input
-                  type="submit"
-                  style={{
-                    visibility: "hidden",
-                    display: "none",
-                    width: "0",
-                    height: "0",
-                  }}
-                />
-              </form>
-            ) : (
-              <Description editable={true} onClick={editDescriptionModeOnClick}>
-                {project?.projectDescription || "Add a project description"}
-              </Description>
-            )}
+        {descriptionEditMode ? (
+          <form
+            onSubmit={handleDescriptionSubmit}
+            style={{ textAlign: "center" }}
+          >
+            <DescriptionEdit
+              defaultValue={descriptionInput}
+              onChange={onDescriptionChange}
+            ></DescriptionEdit>
+            <input
+              type="submit"
+              style={{
+                visibility: "hidden",
+                display: "none",
+                width: "0",
+                height: "0",
+              }}
+            />
+          </form>
+        ) : (
+          <Description editable={true} onClick={editDescriptionModeOnClick}>
+            {project?.projectDescription || "Add a project description"}
+          </Description>
+        )}
       </Wrapper>
     </>
   );
@@ -304,6 +323,59 @@ const SummaryEdit = styled.input`
   outline-color: #35307e;
 `;
 
+const DeleteButton = styled.div`
+  background-color: #e96262;
+  color: white;
+  border-radius: 6px;
+  padding: 5px 10px 5px 10px;
+  margin: 0px;
+  width: fit-content;
+  height: fit-content;
+  font-size: medium;
+  font-weight: 400;
+  transition: 0.15s;
+  cursor: pointer;
+  position: relative;
+
+  .tooltiptext {
+    position: absolute;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.6s;
+    width: 120px;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
+
+    ::after {
+      content: " ";
+      position: absolute;
+      top: 100%; /* At the bottom of the tooltip */
+      left: 10%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #555 transparent transparent transparent;
+    }
+  }
+
+  :hover {
+    .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+`;
+
+const ArchiveButton = styled(DeleteButton)`
+  background-color: #f8b965;
+`
 
 const Description = styled.h1`
   font-size: large;
