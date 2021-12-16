@@ -18,6 +18,11 @@ const getProjects = (projects) => ({
   payload: projects,
 });
 
+const getArchivedProjects = (projects) => ({
+  type: projectsTypes.GET_ARCHIVED_PROJECTS,
+  payload: projects,
+});
+
 const addProject = () => ({
   type: projectsTypes.ADD_PROJECT,
 });
@@ -47,6 +52,10 @@ const deleteProject = () => ({
   type: projectsTypes.DELETE_PROJECT,
 });
 
+const archiveProject = () => ({
+  type: projectsTypes.ARCHIVE_PROJECT,
+});
+
 /* 
 -------------------------------------
 Projects actions 
@@ -55,16 +64,34 @@ Projects actions
 
 export const getProjectsInitiate = (user) => {
   return async function (dispatch) {
-    const q = query(
+    // get UnArchived Projects and save to store
+    const unarchivedQuery = query(
       collection(db, "projects"),
-      where("collaboratorIds", "array-contains", user.id)
+      where("collaboratorIds", "array-contains", user.id),
+      where("archived", "==", false)
     );
-    onSnapshot(q, (querySnapshot) => {
+    onSnapshot(unarchivedQuery, (querySnapshot) => {
       const projects = [];
       querySnapshot.forEach((doc) => {
         projects.push({ ...doc.data(), id: doc.id });
       });
+
       dispatch(getProjects(projects));
+    });
+
+    // get archived Projects and save to store
+    const archivedQuery = query(
+      collection(db, "projects"),
+      where("collaboratorIds", "array-contains", user.id),
+      where("archived", "==", true)
+    );
+    onSnapshot(archivedQuery, (querySnapshot) => {
+      const projects = [];
+      querySnapshot.forEach((doc) => {
+        projects.push({ ...doc.data(), id: doc.id });
+      });
+
+      dispatch(getArchivedProjects(projects));
     });
   };
 };
@@ -72,6 +99,7 @@ export const getProjectsInitiate = (user) => {
 export const addProjectInitiate = (project, user) => {
   return async function (dispatch) {
     await addDoc(collection(db, "projects"), {
+      archived: false,
       projectKey: project.projectKey,
       userId: project.userId,
       projectTitle: project.projectTitle,
@@ -104,7 +132,7 @@ export const deleteProjectInitiate = (projectId) => {
 
     onSnapshot(taskQuery, (querySnapshot) => {
       querySnapshot.forEach(async (task) => {
-        console.log(task.id)
+        console.log(task.id);
         // delete all taskComments of doc
         const commentQuery = query(
           collection(db, "taskComments"),
@@ -113,7 +141,7 @@ export const deleteProjectInitiate = (projectId) => {
         onSnapshot(commentQuery, (commentQuerySnapshot) => {
           commentQuerySnapshot.forEach((comment) => deleteDoc(comment.ref));
         });
-        
+
         // Finally delete doc
         await deleteDoc(task.ref);
       });
@@ -123,6 +151,18 @@ export const deleteProjectInitiate = (projectId) => {
     const projectRef = doc(db, "projects", projectId);
     await deleteDoc(projectRef);
     dispatch(deleteProject());
+  };
+};
+
+export const archiveTaskInitiate = (projectId) => {
+  return async function (dispatch) {
+    // find the task in firestore
+    const projectRef = doc(db, "projects", projectId);
+
+    await updateDoc(projectRef, {
+      archived: true,
+    });
+    dispatch(archiveProject());
   };
 };
 

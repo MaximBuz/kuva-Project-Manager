@@ -200,7 +200,6 @@ export const archiveTaskInitiate = (taskId) => {
   return async function (dispatch) {
     // find the task in firestore
     const taskRef = doc(db, "tasks", taskId);
-    const taskSnap = await getDoc(taskRef);
 
     await updateDoc(taskRef, {
       archived: true
