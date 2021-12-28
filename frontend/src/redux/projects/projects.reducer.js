@@ -11,11 +11,6 @@ const projectsReducer = (state=INITIAL_STATE, action) => {
                 ...state,
                 projects: action.payload
             };
-    case projectsTypes.GET_ARCHIVED_PROJECTS:
-            return {
-                ...state,
-                projects: action.payload
-            };
         case projectsTypes.ADD_PROJECT:
             return {
                 ...state

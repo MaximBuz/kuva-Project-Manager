@@ -13,13 +13,11 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 
+/* NOTIFICATIONS */
+import { toast } from "react-toastify";
+
 const getProjects = (projects) => ({
   type: projectsTypes.GET_PROJECTS,
-  payload: projects,
-});
-
-const getArchivedProjects = (projects) => ({
-  type: projectsTypes.GET_ARCHIVED_PROJECTS,
   payload: projects,
 });
 
@@ -67,8 +65,7 @@ export const getProjectsInitiate = (user) => {
     // get UnArchived Projects and save to store
     const unarchivedQuery = query(
       collection(db, "projects"),
-      where("collaboratorIds", "array-contains", user.id),
-      where("archived", "==", false)
+      where("collaboratorIds", "array-contains", user.id)
     );
     onSnapshot(unarchivedQuery, (querySnapshot) => {
       const projects = [];
@@ -79,20 +76,6 @@ export const getProjectsInitiate = (user) => {
       dispatch(getProjects(projects));
     });
 
-    // get archived Projects and save to store
-    const archivedQuery = query(
-      collection(db, "projects"),
-      where("collaboratorIds", "array-contains", user.id),
-      where("archived", "==", true)
-    );
-    onSnapshot(archivedQuery, (querySnapshot) => {
-      const projects = [];
-      querySnapshot.forEach((doc) => {
-        projects.push({ ...doc.data(), id: doc.id });
-      });
-
-      dispatch(getArchivedProjects(projects));
-    });
   };
 };
 
@@ -119,6 +102,7 @@ export const addProjectInitiate = (project, user) => {
       ],
     });
     dispatch(addProject());
+    toast.success("Successfully added project");
   };
 };
 

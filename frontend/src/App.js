@@ -33,6 +33,10 @@ import {
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import BacklogPage from "./pages/BacklogPage";
 
+// Notifications
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 // App Component
 const App = (props) => {
   const dispatch = useDispatch();
@@ -60,6 +64,7 @@ const App = (props) => {
   return (
     <Switch>
       <div className="App">
+      <ToastContainer/>
         {currentUser ? (
           <div>
             <div>
