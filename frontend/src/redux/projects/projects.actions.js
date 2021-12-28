@@ -101,8 +101,11 @@ export const addProjectInitiate = (project, user) => {
         },
       ],
     });
-    dispatch(addProject());
-    toast.success("Successfully added project");
+    await dispatch(addProject());
+    toast.success("Successfully added project", {position: "bottom-right"});
+
+    // updating state with updated projects
+    await dispatch(getProjectsInitiate(user));
   };
 };
 
@@ -116,7 +119,6 @@ export const deleteProjectInitiate = (projectId) => {
 
     onSnapshot(taskQuery, (querySnapshot) => {
       querySnapshot.forEach(async (task) => {
-        console.log(task.id);
         // delete all taskComments of doc
         const commentQuery = query(
           collection(db, "taskComments"),
@@ -135,6 +137,7 @@ export const deleteProjectInitiate = (projectId) => {
     const projectRef = doc(db, "projects", projectId);
     await deleteDoc(projectRef);
     dispatch(deleteProject());
+    toast.info("Successfully deleted project", {position: "bottom-right"});
   };
 };
 
@@ -147,6 +150,7 @@ export const archiveProjectInitiate = (projectId) => {
       archived: true,
     });
     dispatch(archiveProject());
+    toast.info("Successfully archived project", {position: "bottom-right"});
   };
 };
 
@@ -165,7 +169,7 @@ export const getMembersInitiate = (projectId) => {
   };
 };
 
-export const addMembersInitiate = (projectId, members) => {
+export const addMembersInitiate = (projectId, members, user) => {
   return async function (dispatch) {
     // Find the project in firestore
     const projectRef = doc(db, "projects", projectId);
@@ -180,11 +184,15 @@ export const addMembersInitiate = (projectId, members) => {
       collaborators: [...projectSnap.data().collaborators, ...members],
     });
 
-    dispatch(addMembers());
+    await dispatch(addMembers());
+    toast.success("Successfully added team members", {position: "bottom-right"});
+
+    // updating state with updated projects
+    await dispatch(getProjectsInitiate(user));
   };
 };
 
-export const editMemberInitiate = (projectId, updatedMembers) => {
+export const editMemberInitiate = (projectId, updatedMembers, user) => {
   return async function (dispatch) {
     // find the project in firestore
     const projectRef = doc(db, "projects", projectId);
@@ -194,18 +202,26 @@ export const editMemberInitiate = (projectId, updatedMembers) => {
     await updateDoc(projectRef, {
       collaborators: updatedMembers,
     });
-    dispatch(editMember());
+    await dispatch(editMember());
+    toast.success("Successfully edited team member", {position: "bottom-right"});
+
+    // updating state with updated projects
+    await dispatch(getProjectsInitiate(user));
   };
 };
 
-export const deleteMemberInitiate = (projectId, newMembers, newMemberIds) => {
+export const deleteMemberInitiate = (projectId, newMembers, newMemberIds, user) => {
   return async function (dispatch) {
     const projectRef = doc(db, "projects", projectId);
     await updateDoc(projectRef, {
       collaboratorIds: newMemberIds,
       collaborators: newMembers,
     });
-    dispatch(deleteMember());
+    await dispatch(deleteMember());
+    toast.info("Successfully deleted team member", {position: "bottom-right"});
+
+    // updating state with updated projects
+    await dispatch(getProjectsInitiate(user));
   };
 };
 
@@ -223,5 +239,6 @@ export const editProjectFieldInitiate = (
 
     await updateDoc(projectRef, updatedObject);
     dispatch(editProjectField());
+    toast.success("Successfully edited project", {position: "bottom-right"});
   };
 };

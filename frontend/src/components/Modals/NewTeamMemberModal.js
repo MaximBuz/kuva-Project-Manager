@@ -8,6 +8,9 @@ import { useHistory } from "react-router-dom";
 
 import styled from "styled-components";
 
+/* NOTIFICATIONS */
+import { toast } from "react-toastify";
+
 const initialState = {};
 
 export default function Modal({ closeModal, projectId }) {
@@ -22,9 +25,6 @@ export default function Modal({ closeModal, projectId }) {
 
   // The currently logged in user (to send dynamically filled invitiation mails)
   const { currentUser } = useSelector((state) => state.user);
-
-  // State triggering success notification when invitation has been sent
-  const [emailSuccess, setEmailSuccess] = useState(false);
 
   // for page refresh
   let history = useHistory();
@@ -89,33 +89,19 @@ export default function Modal({ closeModal, projectId }) {
     // resets the form when invitation has been sent
     setQueryError("");
     setState(initialState);
-
-    // triggers success notification on the top right corner of the screen
-    setEmailSuccess(true);
-
-    // removes the notification after 2.5 seconds
-    setTimeout(() => {
-      setEmailSuccess(false);
-    }, 2500);
   };
 
   // adds the chosen team members to the project in firestore and reloads the page with new redux state
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await dispatch(addMembersInitiate(projectId, collaborators));
-    setTimeout(function () {
+    await dispatch(addMembersInitiate(projectId, collaborators, currentUser)).then(() => {
       closeModal();
-      history.push("backlog");
-    }, 500);
-    window.location.reload(true);
+      history.push("team");
+    });
   };
 
   return ReactDom.createPortal(
     <>
-      {/* Notification popup when invitation has been sent */}
-      {emailSuccess && (
-        <EmailSuccessPopUp>Your invitation has been sent!</EmailSuccessPopUp>
-      )}
       {/* Grey background behind modal, closes modal on click */}
       <GreyBackground onClick={() => closeModal()}>
         <FormWrapper
@@ -324,7 +310,7 @@ const SearchField = styled.div`
     transition: 0.3s;
 
     &:focus {
-      box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.10);
+      box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
       transform: scale(1.1);
     }
   }
@@ -334,7 +320,7 @@ const SearchField = styled.div`
     transition: 0.3s;
 
     &:focus {
-      box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.10);
+      box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
       border-color: #35307e;
     }
   }

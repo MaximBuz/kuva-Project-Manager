@@ -12,12 +12,13 @@ import { UilSchedule } from "@iconscout/react-unicons";
 import { UilPen } from "@iconscout/react-unicons";
 
 // State Management
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useState } from "react";
+import { updateCurrentUser } from "../redux/user/user.actions";
 
 // Firebase tools
 import { db } from "../firebase-config";
-import { collection, doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 
 export default function ProfilePage() {
   // Get currently logged in user
@@ -43,9 +44,18 @@ export default function ProfilePage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userRef = doc(db, "users", currentUser.id);
+    //closing modals
+    setIsTitleModalVisible(false)
+    setIsEmailModalVisible(false)
+    setIsPhoneModalVisible(false)
+    setIsLocationModalVisible(false)
+    setIsBirthdayModalVisible(false)
+    setIsAnniversaryModalVisible(false)
+
+    //updating document
     await updateDoc(userRef, inputs);
+    window.location.reload(true)
     setInputs({});
-    window.location.reload(true);
   };
 
   return (

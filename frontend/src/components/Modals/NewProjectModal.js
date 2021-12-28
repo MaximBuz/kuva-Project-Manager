@@ -154,12 +154,10 @@ function Modal({ closeModal }) {
     setState({ ...state, [name]: value, ["userId"]: userID });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(addProjectInitiate(state, currentUser));
-    setTimeout(function () {
-      closeModal();
-    }, 500);
+    await dispatch(addProjectInitiate(state, currentUser));
+    closeModal();
   };
 
   return ReactDom.createPortal(

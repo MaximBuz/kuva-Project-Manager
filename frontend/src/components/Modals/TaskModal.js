@@ -1,6 +1,7 @@
 import ReactDom from "react-dom";
 import moment from "moment";
 import { useState, useEffect } from "react";
+import { useHistory } from "react-router";
 import UserCard from "../Cards/UserCard";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -25,25 +26,24 @@ function Modal({ closeModal, task }) {
   // Get the Task priority from props
   let priority = task.taskPriority || "";
 
+  const history = useHistory();
+
   // Handle deletion of task
   const deleteTask = async () => {
     closeModal();
-    await dispatch(deleteTaskInitiate(task.id));
-    window.location.reload(true);
+    await dispatch(deleteTaskInitiate(task.id, task.projectId));
   };
 
   // Handle archivation of task
   const archiveTask = async () => {
     closeModal();
-    await dispatch(archiveTaskInitiate(task.id));
-    window.location.reload(true);
+    await dispatch(archiveTaskInitiate(task.id, task.projectId));
   };
 
   // Handle unarchivation of task
   const unArchiveTask = async () => {
     closeModal();
-    await dispatch(unArchiveTaskInitiate(task.id));
-    window.location.reload(true);
+    await dispatch(unArchiveTaskInitiate(task.id, task.projectId));
   };
 
   /* 

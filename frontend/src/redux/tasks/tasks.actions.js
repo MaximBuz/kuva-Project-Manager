@@ -11,9 +11,10 @@ import {
   doc,
   updateDoc,
   getDoc,
-  setDoc,
 } from "firebase/firestore";
-import { store } from "../store";
+
+/* NOTIFICATIONS */
+import { toast } from "react-toastify";
 
 const getTasks = (tasks) => ({
   type: tasksTypes.GET_TASKS,
@@ -47,16 +48,16 @@ const editTaskField = () => ({
 
 const archiveTask = () => ({
   type: tasksTypes.ARCHIVE_TASK,
-})
+});
 
 const unArchiveTask = () => ({
   type: tasksTypes.ARCHIVE_TASK,
-})
+});
 
 const getArchivedTasks = (tasks) => ({
   type: tasksTypes.GET_ARCHIVED_TASKS,
-  payload: tasks
-})
+  payload: tasks,
+});
 
 export const cleanUpTasks = () => ({
   type: tasksTypes.CLEAN_UP_TASKS,
@@ -76,6 +77,7 @@ export const getTasksInitiate = (projectId) => {
         tasks.push({ ...doc.data(), id: doc.id });
       });
       dispatch(getTasks(tasks));
+      unsubscribe();
     });
   };
 };
@@ -123,7 +125,11 @@ export const addTaskInitiate = (task) => {
       status: task.status,
       column: "backlog-column",
     });
-    dispatch(addTask());
+    await dispatch(addTask());
+    toast.success("Successfully added new task to backlog", {position: "bottom-right"});
+
+    // updating state with updated projects
+    await dispatch(getTasksInitiate(task.projectId));
   };
 };
 
@@ -142,10 +148,14 @@ export const updateTaskInitiate = (task) => {
   };
 };
 
-export const deleteTaskInitiate = (taskId) => {
+export const deleteTaskInitiate = (taskId, projectId) => {
   return async function (dispatch) {
     await deleteDoc(doc(db, "tasks", taskId));
-    dispatch(deleteTask());
+    await dispatch(deleteTask());
+    toast.info("Successfully deleted task", {position: "bottom-right"});
+
+    // updating state with updated projects
+    await dispatch(getTasksInitiate(projectId));
   };
 };
 
@@ -188,39 +198,45 @@ export const editTaskFieldInitiate = (taskId, taskField, updatedValue) => {
     // find the task in firestore
     const taskRef = doc(db, "tasks", taskId);
     const taskSnap = await getDoc(taskRef);
-    const updatedObject = {}
+    const updatedObject = {};
     updatedObject[taskField] = updatedValue;
 
     await updateDoc(taskRef, updatedObject);
     dispatch(editTaskField());
+    toast.success("Successfully edited task", {position: "bottom-right"});
   };
 };
 
-export const archiveTaskInitiate = (taskId) => {
+export const archiveTaskInitiate = (taskId, projectId) => {
   return async function (dispatch) {
     // find the task in firestore
     const taskRef = doc(db, "tasks", taskId);
 
     await updateDoc(taskRef, {
-      archived: true
+      archived: true,
     });
-    dispatch(archiveTask());
+    await dispatch(archiveTask());
+    toast.info("Successfully archived task", {position: "bottom-right"});
+    // updating state with updated projects
+    await dispatch(getTasksInitiate(projectId));
   };
 };
 
-export const unArchiveTaskInitiate = (taskId) => {
+export const unArchiveTaskInitiate = (taskId, projectId) => {
   return async function (dispatch) {
     // find the task in firestore
     const taskRef = doc(db, "tasks", taskId);
     const taskSnap = await getDoc(taskRef);
 
     await updateDoc(taskRef, {
-      archived: false
+      archived: false,
     });
-    dispatch(unArchiveTask());
+    await dispatch(unArchiveTask());
+    toast.info("Successfully unarchived task", {position: "bottom-right"});
+    // updating state with updated projects
+    await dispatch(getTasksInitiate(projectId));
   };
 };
-
 
 export const getArchivedTasksInitiate = (projectId) => {
   return function (dispatch) {

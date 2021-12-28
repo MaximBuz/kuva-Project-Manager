@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import UserAvatar from "../Misc/UserAvatar";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   deleteMemberInitiate,
   editMemberInitiate,
@@ -18,9 +18,11 @@ export default function UserModal({ closeModal, user, projectId, members }) {
     const newMembers = members.filter((member) => member.id !== user.id);
     const newMemberIds = newMembers.map((member) => member.id);
     closeModal();
-    await dispatch(deleteMemberInitiate(projectId, newMembers, newMemberIds));
-    window.location.reload(true);
+    await dispatch(deleteMemberInitiate(projectId, newMembers, newMemberIds, user));
   };
+
+  // The currently logged in user (to send dynamically filled invitiation mails)
+  const { currentUser } = useSelector((state) => state.user);
 
   // Turn on editable field
   const [projectRoleEditMode, setProjectRoleEditMode] = useState(false);
@@ -43,7 +45,7 @@ export default function UserModal({ closeModal, user, projectId, members }) {
       }
       return member;
     });
-    dispatch(editMemberInitiate(projectId, newMembers));
+    dispatch(editMemberInitiate(projectId, newMembers, currentUser));
     setProjectRoleEditMode(false);
   };
 
@@ -70,8 +72,7 @@ export default function UserModal({ closeModal, user, projectId, members }) {
                   <p>Remove from Team</p>
                   <span className="tooltiptext">Cannot delete owners</span>
                 </DeleteButton>
-              )
-              }
+              )}
             </HeaderPills>
             <CloseButton onClick={() => closeModal()} viewBox="0 0 17 19">
               <path d="M1 1L16 18M16 1L1 18" stroke="black" />
@@ -167,7 +168,7 @@ const HeaderPills = styled.div`
 `;
 
 const DeleteButton = styled.div`
-  background-color: ${({disabled}) => disabled ? "lightgrey" : "#e96262"};
+  background-color: ${({ disabled }) => (disabled ? "lightgrey" : "#e96262")};
   color: white;
   border-radius: 6px;
   padding: 5px 10px 5px 10px;
@@ -177,7 +178,7 @@ const DeleteButton = styled.div`
   font-size: medium;
   font-weight: 400;
   transition: 0.15s;
-  cursor: ${({disabled}) => disabled ? "not-allowed" : "pointer"};
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   position: relative;
 
   .tooltiptext {
@@ -191,7 +192,7 @@ const DeleteButton = styled.div`
     border-radius: 6px;
     z-index: 1;
     opacity: 0;
-    transition: opacity .6s;
+    transition: opacity 0.6s;
     width: 120px;
     top: 140%;
     left: 50%;
@@ -200,25 +201,25 @@ const DeleteButton = styled.div`
     ::after {
       content: " ";
       position: absolute;
-      bottom: 100%;  /* At the top of the tooltip */
+      bottom: 100%; /* At the top of the tooltip */
       left: 50%;
       margin-left: -5px;
       border-width: 5px;
       border-style: solid;
       border-color: transparent transparent #555 transparent;
     }
-
   }
 
-  ${({disabled}) => disabled && `
+  ${({ disabled }) =>
+    disabled &&
+    `
     :hover {
       .tooltiptext {
         visibility: visible;
         opacity: 1;
       }
     }
-  `
-  };
+  `};
 `;
 
 const CloseButton = styled.svg.attrs({

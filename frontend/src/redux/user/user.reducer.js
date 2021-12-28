@@ -12,6 +12,10 @@ const userReducer = (state=INITIAL_STATE, action) => {
         ...state,
         currentUser: action.payload
       }
+    case userTypes.UPDATE_CURRENT_USER:
+      return {
+        ...state,
+      }
     case userTypes.SIGN_IN_SUCCESS:
         return {
           ...state,

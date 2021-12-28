@@ -185,7 +185,6 @@ function Modal({ closeModal, projectId }) {
   const collaborators = projects.filter(
     (project) => project.id === projectId
   )[0].collaborators;
-  console.log(collaborators)
 
   const userID = currentUser.id;
   const userName = currentUser.displayName;
@@ -206,12 +205,9 @@ function Modal({ closeModal, projectId }) {
   /* STOP!! Change this to TASKS handler!! */
   const handleSubmit = async (e) => {
     e.preventDefault();
+    closeModal();
+    history.push("backlog");
     await dispatch(addTaskInitiate(state));
-    setTimeout(function () {
-      closeModal();
-      history.push("backlog");
-    }, 500);
-    window.location.reload(true);
   };
 
   return ReactDom.createPortal(

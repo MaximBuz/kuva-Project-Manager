@@ -16,12 +16,18 @@ import styled from "styled-components";
 
 function BacklogPage() {
   const [openModal, setOpenModal] = useState("");
+
+  // Get project Id From url
   const { identifier } = useParams();
+
+  // Get tasks from store
   const { tasks } = useSelector((state) => state.tasks);
+
+  // Get all tasks for that project from firestore
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getTasksInitiate(identifier));
-  }, []);
+  }, [dispatch, identifier]);
 
   // Population of Selected for development Column
   const [tasksSelected, setTasksSelected] = useState(
@@ -35,6 +41,12 @@ function BacklogPage() {
     tasks.filter((element) => element.column === "backlog-column")
   );
   const countBacklog = tasksBacklog.length;
+
+  // Updating react state with tasks when tasks in store change
+  useEffect(() => {
+    setTasksSelected(tasks.filter((element) => element.column === "selected-for-development-column"));
+    setTasksBacklog(tasks.filter((element) => element.column === "backlog-column"));
+  }, [tasks]);
 
   // Drag and drop functionality (TODO: Move to seperate file, way to big a function)
   const onDragEnd = (result) => {
