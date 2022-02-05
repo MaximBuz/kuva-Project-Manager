@@ -280,16 +280,16 @@ function TasksPage() {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div>
-        <FilterSection>
+        {/* <FilterSection>
           <p>
             Search Tasks{" "}
             <span>
               <SearchField type="text"></SearchField>
             </span>
           </p>
-          {/* <div className="filter-checkbox">
-                    </div> */}
-        </FilterSection>
+          <div className="filter-checkbox">
+                    </div>
+        </FilterSection> */}
         <ColumnsWrapper>
           <Column>
             <ColumnTitleRow>
