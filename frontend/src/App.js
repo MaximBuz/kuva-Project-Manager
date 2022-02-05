@@ -66,8 +66,8 @@ const App = (props) => {
       <div className="App">
       <ToastContainer/>
         {currentUser ? (
-          <div>
-            <div>
+          <>
+            <>
               <Route
                 exact
                 path="/"
@@ -162,8 +162,8 @@ const App = (props) => {
                 )}
               />
 
-            </div>
-          </div>
+            </>
+          </>
         ) : (
           <LoginPage />
         )}

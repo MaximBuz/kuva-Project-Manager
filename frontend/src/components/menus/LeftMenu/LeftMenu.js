@@ -1,8 +1,6 @@
 import MenuItem from './MenuItem';
 import styled from 'styled-components';
 
-import { ReactComponent as ReactLogo } from '../../../kuva_logo.svg';
-
 const LeftMenuWrapper = styled.div`
  position: absolute;
  margin: 35px;
@@ -12,7 +10,6 @@ const LeftMenuWrapper = styled.div`
  justify-content: start;
  gap: 30px;
  z-index: 100;
- height: 70vh;
 `;
 
 function LeftMenu(props) {
@@ -27,9 +24,7 @@ function LeftMenu(props) {
       return <MenuItem key={index} icon={item.icon} text={item.text} url={newLink} active={item.active} />;
      }
     })}
-   <ReactLogo
-    style={{ height: 40, width: 40, transform: 'scale(5)', marginBottom: -80, marginTop: 'auto' }}
-   />
+
   </LeftMenuWrapper>
  );
 }

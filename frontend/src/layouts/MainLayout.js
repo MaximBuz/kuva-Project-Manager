@@ -1,17 +1,28 @@
 import LeftMenu from '../components/Menus/LeftMenu/LeftMenu';
 import TopMenu from '../components/Menus/TopMenu/TopMenu';
 
+import logo from '../kuva_logo.png';
 import styled from 'styled-components';
 
 export default function MainLayout(props) {
  const { identifier } = props.match ? props.match.params : '';
  return (
-  <div>
+  <>
    <TopMenu projectId={identifier} />
    <LeftMenu items={props.menuContent} projectId={identifier} />
+   <LogoWrapper>
+    <img
+      src={logo}
+      alt="logo"
+      style={{
+        width: 150,
+        height: 150,
+        objectFit: "cover"
+      }}
+    />
+   </LogoWrapper>
    <ContentWrapper>{props.children}</ContentWrapper>
-   
-  </div>
+  </>
  );
 }
 
@@ -39,3 +50,15 @@ const ContentWrapper = styled.div`
   display: none;
  }
 `;
+
+const LogoWrapper = styled.div`
+  height: 100px;
+  width: 100px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+`
